@@ -631,7 +631,7 @@ function doBrew() {
   S.items.push(it); seen(UI.recipe);
   S.made[UI.recipe] = (S.made[UI.recipe] || 0) + 1;
   S.brewsLeft--; S.stats.brewed++;
-  const lines = [["info", `${r.ic} ${r.name}ができた！　品質${q}` + (it.trait ? `\n特性「${TRAIT[it.trait].name}」がついた！` : "")]];
+  const lines = [["info", `「${r.name}」ができた！　品質${q}` + (it.trait ? `\n特性「${TRAIT[it.trait].name}」がついた！` : "")]];
   // ひらめき
   const locked = Object.keys(RECIPES).filter(k => RECIPES[k].get === "book" && !S.recipes.includes(k));
   if (locked.length && Math.random() < 0.1) {
