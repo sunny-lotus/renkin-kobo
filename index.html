@@ -146,6 +146,14 @@
   .grid-dex { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
   .dex { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px; text-align: center; font-size: 13px; }
   .dex .ic { font-size: 28px; }
+  .ico {
+    display: inline-flex; align-items: center; justify-content: center; vertical-align: middle;
+    width: 1.3em; height: 1.3em; border-radius: 50%; background: var(--c, #8a7a66); color: #fff;
+    box-shadow: inset 0 0 0 0.08em rgba(255, 255, 255, 0.45); margin-right: 0.15em; flex-shrink: 0;
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "BIZ UDPMincho", "Noto Serif JP", serif; font-weight: bold; line-height: 1;
+  }
+  .ico i { font-style: normal; font-size: 0.66em; }
+  .ico.q { background: #c9bda6; }
   .dex.unknown { color: var(--ink-soft); }
   .pill { display: inline-block; font-size: 13px; padding: 2px 10px; border-radius: 999px; background: var(--paper-2); }
 </style>
@@ -178,53 +186,53 @@ const TRAIT = {
 const TRAIT_NEED = 4;
 
 const MATS = {
-  herb:     { name: "薬草",       ic: "🌿", el: { w: 1, e: 1 } },
-  nut:      { name: "木の実",     ic: "🌰", el: { e: 2 } },
-  sap:      { name: "樹液",       ic: "🍯", el: { f: 1, w: 1 } },
-  mush:     { name: "きのこ",     ic: "🍄", el: { e: 1, a: 1 } },
-  water:    { name: "清水",       ic: "💧", el: { w: 2 } },
-  stone:    { name: "川石",       ic: "🪨", el: { e: 2 } },
-  crystal:  { name: "水晶のかけら", ic: "💎", el: { a: 1, e: 1 } },
-  flower:   { name: "野の花",     ic: "🌼", el: { a: 1, w: 1 } },
-  feather:  { name: "羽根",       ic: "🪶", el: { a: 2 } },
-  flint:    { name: "火打ち石",   ic: "🔥", el: { f: 2 } },
-  iron:     { name: "鉄くず",     ic: "🔩", el: { e: 2, f: 1 } },
-  sulfur:   { name: "硫黄",       ic: "🟡", el: { f: 2, a: 1 } },
-  lakeweed: { name: "湖の藻",     ic: "🌱", el: { w: 2, a: 1 } },
-  stardrop: { name: "星のしずく", ic: "✨", el: { s: 2, w: 1 } },
+  herb:     { name: "薬草",       ic: "草", el: { w: 1, e: 1 } },
+  nut:      { name: "木の実",     ic: "実", el: { e: 2 } },
+  sap:      { name: "樹液",       ic: "液", el: { f: 1, w: 1 } },
+  mush:     { name: "きのこ",     ic: "茸", el: { e: 1, a: 1 } },
+  water:    { name: "清水",       ic: "清", el: { w: 2 } },
+  stone:    { name: "川石",       ic: "石", el: { e: 2 } },
+  crystal:  { name: "水晶のかけら", ic: "晶", el: { a: 1, e: 1 } },
+  flower:   { name: "野の花",     ic: "花", el: { a: 1, w: 1 } },
+  feather:  { name: "羽根",       ic: "羽", el: { a: 2 } },
+  flint:    { name: "火打ち石",   ic: "火", el: { f: 2 } },
+  iron:     { name: "鉄くず",     ic: "鉄", el: { e: 2, f: 1 } },
+  sulfur:   { name: "硫黄",       ic: "硫", el: { f: 2, a: 1 } },
+  lakeweed: { name: "湖の藻",     ic: "藻", el: { w: 2, a: 1 } },
+  stardrop: { name: "星のしずく", ic: "雫", el: { s: 2, w: 1 } },
 };
 
 const PLACES = {
-  forest: { name: "東の森",     ic: "🌲", mats: { herb: 4, nut: 3, sap: 3, mush: 3 }, q: [10, 60], desc: "薬草や木の実がとれる" },
-  river:  { name: "川原",       ic: "🏞️", mats: { water: 4, stone: 4, crystal: 2 }, q: [10, 60], desc: "清水と石がとれる" },
-  hill:   { name: "風見の丘",   ic: "⛰️", mats: { flower: 4, feather: 3, flint: 3 }, q: [10, 60], desc: "花・羽根・火打ち石" },
-  mine:   { name: "古い鉱山",   ic: "⛏️", mats: { iron: 4, sulfur: 3, crystal: 2, stone: 2 }, q: [25, 75], pass: 150, rank: 1, desc: "鉄くずと硫黄。質がよい" },
-  lake:   { name: "星見の湖",   ic: "🌌", mats: { lakeweed: 4, stardrop: 3, water: 2 }, q: [40, 90], pass: 300, rank: 2, desc: "星のしずくは晴れの日だけ" },
+  forest: { name: "東の森",     ic: "森", mats: { herb: 4, nut: 3, sap: 3, mush: 3 }, q: [10, 60], desc: "薬草や木の実がとれる" },
+  river:  { name: "川原",       ic: "川", mats: { water: 4, stone: 4, crystal: 2 }, q: [10, 60], desc: "清水と石がとれる" },
+  hill:   { name: "風見の丘",   ic: "丘", mats: { flower: 4, feather: 3, flint: 3 }, q: [10, 60], desc: "花・羽根・火打ち石" },
+  mine:   { name: "古い鉱山",   ic: "鉱", mats: { iron: 4, sulfur: 3, crystal: 2, stone: 2 }, q: [25, 75], pass: 150, rank: 1, desc: "鉄くずと硫黄。質がよい" },
+  lake:   { name: "星見の湖",   ic: "湖", mats: { lakeweed: 4, stardrop: 3, water: 2 }, q: [40, 90], pass: 300, rank: 2, desc: "星のしずくは晴れの日だけ" },
 };
 
 const CATS = {
-  adv:  { name: "冒険者",       ic: "🧭" },
-  town: { name: "町の人",       ic: "🧺" },
-  doki: { name: "導機屋の職人", ic: "🛠️" },
+  adv:  { name: "冒険者",       ic: "冒" },
+  town: { name: "町の人",       ic: "町" },
+  doki: { name: "導機屋の職人", ic: "機" },
 };
 
 // needs: 素材ID または 品物ID
 const RECIPES = {
-  potion:   { name: "回復薬",         ic: "🧪", needs: ["herb", "water"],              value: 40,  cat: "adv",  get: "start" },
-  fuel:     { name: "導機灯の燃料",   ic: "🪔", needs: ["sap", "flint"],               value: 45,  cat: "doki", get: "start" },
-  soap:     { name: "せっけん",       ic: "🧼", needs: ["flower", "sap"],              value: 35,  cat: "town", get: "start" },
-  incense:  { name: "虫よけの香",     ic: "🕯️", needs: ["mush", "flower"],             value: 35,  cat: "town", get: "start" },
-  whet:     { name: "研ぎ粉",         ic: "🌫️", needs: ["stone", "flint"],             value: 40,  cat: "adv",  get: "start" },
-  antidote: { name: "解毒薬",         ic: "💊", needs: ["herb", "mush", "water"],      value: 70,  cat: "adv",  get: "book", price: 80 },
-  ration:   { name: "保存食",         ic: "🥫", needs: ["nut", "sap", "water"],        value: 60,  cat: "town", get: "book", price: 60 },
-  charm:    { name: "風のお守り",     ic: "🧿", needs: ["feather", "crystal"],         value: 65,  cat: "adv",  get: "book", price: 100 },
-  oil:      { name: "導機の潤滑油",   ic: "🛢️", needs: ["iron", "sap"],                value: 80,  cat: "doki", get: "story" },
-  gear:     { name: "導機の歯車",     ic: "⚙️", needs: ["iron", "iron", "flint"],      value: 120, cat: "doki", get: "book", price: 180 },
-  lampoil:  { name: "長持ち灯油",     ic: "🏮", needs: ["fuel", "sulfur"],             value: 110, cat: "doki", get: "book", price: 150 },
-  hipotion: { name: "上級回復薬",     ic: "⚗️", needs: ["potion", "herb", "lakeweed"], value: 140, cat: "adv",  get: "book", price: 200 },
-  ink:      { name: "星砂のインク",   ic: "🖋️", needs: ["crystal", "stardrop"],        value: 130, cat: "town", get: "book", price: 220 },
-  perfume:  { name: "星明かりの香水", ic: "🌸", needs: ["flower", "stardrop", "water"], value: 160, cat: "town", get: "book", price: 250 },
-  amulet:   { name: "守り刀の護符",   ic: "🗡️", needs: ["charm", "iron", "stardrop"],  value: 220, cat: "adv",  get: "story" },
+  potion:   { name: "回復薬",         ic: "癒", needs: ["herb", "water"],              value: 40,  cat: "adv",  get: "start" },
+  fuel:     { name: "導機灯の燃料",   ic: "燃", needs: ["sap", "flint"],               value: 45,  cat: "doki", get: "start" },
+  soap:     { name: "せっけん",       ic: "泡", needs: ["flower", "sap"],              value: 35,  cat: "town", get: "start" },
+  incense:  { name: "虫よけの香",     ic: "香", needs: ["mush", "flower"],             value: 35,  cat: "town", get: "start" },
+  whet:     { name: "研ぎ粉",         ic: "研", needs: ["stone", "flint"],             value: 40,  cat: "adv",  get: "start" },
+  antidote: { name: "解毒薬",         ic: "解", needs: ["herb", "mush", "water"],      value: 70,  cat: "adv",  get: "book", price: 80 },
+  ration:   { name: "保存食",         ic: "食", needs: ["nut", "sap", "water"],        value: 60,  cat: "town", get: "book", price: 60 },
+  charm:    { name: "風のお守り",     ic: "守", needs: ["feather", "crystal"],         value: 65,  cat: "adv",  get: "book", price: 100 },
+  oil:      { name: "導機の潤滑油",   ic: "油", needs: ["iron", "sap"],                value: 80,  cat: "doki", get: "story" },
+  gear:     { name: "導機の歯車",     ic: "歯", needs: ["iron", "iron", "flint"],      value: 120, cat: "doki", get: "book", price: 180 },
+  lampoil:  { name: "長持ち灯油",     ic: "灯", needs: ["fuel", "sulfur"],             value: 110, cat: "doki", get: "book", price: 150 },
+  hipotion: { name: "上級回復薬",     ic: "治", needs: ["potion", "herb", "lakeweed"], value: 140, cat: "adv",  get: "book", price: 200 },
+  ink:      { name: "星砂のインク",   ic: "墨", needs: ["crystal", "stardrop"],        value: 130, cat: "town", get: "book", price: 220 },
+  perfume:  { name: "星明かりの香水", ic: "薫", needs: ["flower", "stardrop", "water"], value: 160, cat: "town", get: "book", price: 250 },
+  amulet:   { name: "守り刀の護符",   ic: "護", needs: ["charm", "iron", "stardrop"],  value: 220, cat: "adv",  get: "story" },
 };
 
 const RANKS = [
@@ -236,25 +244,49 @@ const RANKS = [
 ];
 
 const UPG = {
-  kama:   { name: "かまの導機", ic: "🫕", costs: [150, 300], desc: ["1日に調合できる回数 +1", "品質 +5"] },
-  shelf:  { name: "たな",       ic: "🗄️", costs: [120, 250], desc: ["並べられる数 +2"] },
-  basket: { name: "採取かご",   ic: "🧺", costs: [80, 200],  desc: ["1回の採取で持ち帰る数 +3"] },
+  kama:   { name: "かまの導機", ic: "釜", costs: [150, 300], desc: ["1日に調合できる回数 +1", "品質 +5"] },
+  shelf:  { name: "たな",       ic: "棚", costs: [120, 250], desc: ["並べられる数 +2"] },
+  basket: { name: "採取かご",   ic: "籠", costs: [80, 200],  desc: ["1回の採取で持ち帰る数 +3"] },
 };
 
 const WEATHER = [
-  { id: "sun",   name: "晴れ",   ic: "☀️" },
-  { id: "cloud", name: "くもり", ic: "☁️" },
-  { id: "rain",  name: "雨",     ic: "🌧️" },
-  { id: "wind",  name: "風",     ic: "🍃" },
+  { id: "sun",   name: "晴れ",   ic: "晴" },
+  { id: "cloud", name: "くもり", ic: "曇" },
+  { id: "rain",  name: "雨",     ic: "雨" },
+  { id: "wind",  name: "風",     ic: "風" },
 ];
 
 const PEOPLE = {
-  volt:   { name: "ヴォルト",         ic: "🔧" },
-  nacht:  { name: "ナハト",           ic: "🗡️" },
-  okami:  { name: "銀鹿亭の女主人",   ic: "🍺" },
-  letter: { name: "師匠の手紙",       ic: "✉️" },
-  me:     { name: "",                 ic: "⚗️" },
-  info:   { name: "",                 ic: "📜" },
+  volt:   { name: "ヴォルト",         ic: "ヴ" },
+  nacht:  { name: "ナハト",           ic: "ナ" },
+  okami:  { name: "銀鹿亭の女主人",   ic: "宿" },
+  letter: { name: "師匠の手紙",       ic: "文" },
+  me:     { name: "",                 ic: "錬" },
+  info:   { name: "",                 ic: "記" },
+};
+
+// しるし（漢字1文字の丸いバッジ）
+const ELCOL = { f: "#d9613f", w: "#3f86c9", a: "#4aa58a", e: "#9a7448", s: "#8a63c9" };
+const CATCOL = { adv: "#2f5d8a", town: "#c0587a", doki: "#a8742c" };
+function badge(ch, col) { return `<span class="ico" style="--c:${col}"><i>${ch}</i></span>`; }
+const UNKNOWN = '<span class="ico q"><i>？</i></span>';
+for (const m of Object.values(MATS)) {
+  const top = Object.entries(m.el).sort((a, b) => b[1] - a[1])[0][0];
+  m.ic = badge(m.ic, ELCOL[top]);
+}
+for (const r of Object.values(RECIPES)) r.ic = badge(r.ic, CATCOL[r.cat]);
+for (const [k, c] of Object.entries(CATS)) c.ic = badge(c.ic, CATCOL[k]);
+for (const p of Object.values(PLACES)) p.ic = badge(p.ic, "#4f7d52");
+for (const u of Object.values(UPG)) u.ic = badge(u.ic, "#8a6a3e");
+for (const w of WEATHER) w.ic = badge(w.ic, { sun: "#d9962e", cloud: "#8a94a3", rain: "#4f78a8", wind: "#4aa58a" }[w.id]);
+const PCOL = { volt: "#c49a2c", nacht: "#33384a", okami: "#8a5a3c", letter: "#9c8a6a", me: "#b5652b", info: "#6a7a8a" };
+for (const [k, p] of Object.entries(PEOPLE)) p.ic = badge(p.ic, PCOL[k]);
+const UIC = {
+  storage: badge("倉", "#8a6a3e"), recipe: badge("帳", "#b5652b"), dex: badge("図", "#2f5d8a"),
+  money: badge("金", "#c9962e"), rank: badge("位", "#b5652b"), board: badge("依", "#2f5d8a"),
+  brew: badge("釜", "#b5652b"), gather: badge("籠", "#4f7d52"), shop: badge("店", "#c0587a"),
+  night: badge("夜", "#26355e"), buy: badge("買", "#8a6a3e"), story: badge("話", "#c9962e"),
+  star: badge("星", "#8a63c9"), lock: badge("鍵", "#8a7a66"), morning: badge("朝", "#d9962e"),
 };
 
 const CLIENTS = ["宿の常連さん", "見回りの兵士", "鍛冶屋の親方", "パン屋のおかみさん", "旅の商人", "導機屋の親方", "郵便配達の人", "子ども連れのお母さん"];
@@ -691,7 +723,7 @@ function showStorage(tab = UI.stTab || "items") {
     return `<div class="item"><div class="ic">${f.ic}</div><div class="body"><div class="name">${f.name} ×${arr.length}</div>
       <div class="muted">${arr.map(x => `${x.q}${x.trait ? "★" : ""}`).join("・")}</div></div></div>`;
   }).join("") : `<p class="muted">まだ何もない。</p>`;
-  modal(`<h2>📦 倉庫</h2>
+  modal(`<h2>${UIC.storage} 倉庫</h2>
     <div class="tabs"><button class="${tab === "items" ? "on" : ""}" data-act="stTab" data-k="items">品物 ${S.items.length}</button>
     <button class="${tab === "mats" ? "on" : ""}" data-act="stTab" data-k="mats">素材 ${S.mats.length}</button></div>
     <p class="muted">数字は品質。★は特性つき。</p><div class="list">${body}</div>`);
@@ -700,22 +732,22 @@ function showStorage(tab = UI.stTab || "items") {
 function showRecipes() {
   const body = Object.entries(RECIPES).map(([k, r]) => {
     const have = S.recipes.includes(k);
-    return `<div class="item ${have ? "" : "off"}"><div class="ic">${have ? r.ic : "❔"}</div><div class="body">
+    return `<div class="item ${have ? "" : "off"}"><div class="ic">${have ? r.ic : UNKNOWN}</div><div class="body">
       <div class="name">${have ? r.name : "？？？"} <span class="tag">${CATS[r.cat].name}むけ</span></div>
       <div class="muted">${have ? r.needs.map(n => info(n).ic + info(n).name).join(" ＋ ") + ` ／ もとの値段 ${r.value}G` : (r.get === "book" ? "夜の買い物で本が買える" : "だれかが教えてくれるかも")}</div>
       </div></div>`;
   }).join("");
-  modal(`<h2>📖 レシピ帳 ${S.recipes.length}/${Object.keys(RECIPES).length}</h2>
+  modal(`<h2>${UIC.recipe} レシピ帳 ${S.recipes.length}/${Object.keys(RECIPES).length}</h2>
     <p class="muted">同じ性質を ${TRAIT_NEED} 以上そろえると特性がつく。特性つきは高く売れる。</p><div class="list">${body}</div>`);
 }
 
 function showDex() {
   const cell = (id, f) => S.seen[id]
     ? `<div class="dex"><div class="ic">${f.ic}</div>${f.name}${MATS[id] ? "<br>" + chips(f.el) : ""}</div>`
-    : `<div class="dex unknown"><div class="ic">❔</div>？？？</div>`;
+    : `<div class="dex unknown"><div class="ic">${UNKNOWN}</div>？？？</div>`;
   const nm = Object.keys(MATS).filter(k => S.seen[k]).length;
   const ni = Object.keys(RECIPES).filter(k => S.seen[k]).length;
-  modal(`<h2>📕 図鑑</h2>
+  modal(`<h2>${UIC.dex} 図鑑</h2>
     <h3>素材 ${nm}/${Object.keys(MATS).length}</h3><div class="grid-dex">${Object.entries(MATS).map(([k, f]) => cell(k, f)).join("")}</div>
     <h3>品物 ${ni}/${Object.keys(RECIPES).length}</h3><div class="grid-dex">${Object.entries(RECIPES).map(([k, f]) => cell(k, f)).join("")}</div>`);
 }
@@ -731,9 +763,9 @@ function header() {
   const ri = rankIdx(), next = RANKS[ri + 1];
   return `<header class="bar">
     <span class="day">${S.ended ? "のんびり " : ""}${S.day}日目</span><span class="pill">${ph}</span>
-    <span class="stat">💰 <b>${S.money}</b>G</span>
-    <span class="stat">⭐ <b>${RANKS[ri].name}</b>（評判 ${S.rep}${next ? " / 次 " + next.rep : ""}）</span>
-    <span class="tools"><button data-act="storage" title="倉庫">📦</button><button data-act="recipes" title="レシピ帳">📖</button><button data-act="dex" title="図鑑">📕</button></span>
+    <span class="stat">${UIC.money}<b>${S.money}</b>G</span>
+    <span class="stat">${UIC.rank}<b>${RANKS[ri].name}</b>（評判 ${S.rep}${next ? " / 次 " + next.rep : ""}）</span>
+    <span class="tools"><button data-act="storage" >倉庫</button><button data-act="recipes" >レシピ</button><button data-act="dex" >図鑑</button></span>
   </header>`;
 }
 
@@ -752,7 +784,7 @@ function viewTitle() {
   const sv = loadSave();
   document.body.className = "";
   $("#app").innerHTML = `<div class="card title">
-    <div class="flask">⚗️</div>
+    <div class="flask">${badge("錬", "#b5652b")}</div>
     <h1>ノルンの錬金工房</h1>
     <p class="muted">師匠の留守をあずかる、見習い錬金術師の30日。</p>
     ${sv ? `<p><button class="main big" data-act="continue">つづきから（${sv.day}日目・${esc(sv.name)}）</button></p>` : ""}
@@ -768,18 +800,18 @@ function viewMorning() {
   const notes = S.today.notes.map(n => `<div class="muted">・${esc(n)}</div>`).join("");
   const orders = S.orders.length ? S.orders.map(o => orderCard(o, true)).join("") : `<p class="muted">今日の依頼はない。</p>`;
   return `<div class="card">
-    <h2>☀️ 朝の工房</h2>
+    <h2>${UIC.morning} 朝の工房</h2>
     <div class="row"><span class="pill">${w.ic} ${w.name}</span><span class="pill">${c.ic} 今日は${c.name}が多そう</span></div>
     ${S.weather === "sun" ? `<p class="muted">晴れの日は採取した素材の質が少しよい。星見の湖で星のしずくがとれる。</p>` :
       S.weather === "rain" ? `<p class="muted">雨の日は森の薬草・きのこ、川原の清水が多くとれる。</p>` :
       S.weather === "wind" ? `<p class="muted">風の日は丘で羽根が多くとれる。</p>` : `<p class="muted">くもり。星見の湖の星のしずくはとれにくい。</p>`}
     ${notes}
   </div>
-  <div class="card"><h2>📌 銀鹿亭の依頼掲示板</h2><div class="list">${orders}</div></div>
+  <div class="card"><h2>${UIC.board} 銀鹿亭の依頼掲示板</h2><div class="list">${orders}</div></div>
   <div class="card"><h2>今日の昼はどうする？</h2>
     <div class="choice">
-      <button data-act="noon" data-k="gather"><span class="ic">🧺</span><b>採取に行く</b><br><span class="muted">素材を ${basketSize()} こ持ち帰る</span></button>
-      <button data-act="noon" data-k="brew" ${S.mats.length ? "" : "disabled"}><span class="ic">🫕</span><b>工房で調合する</b><br><span class="muted">最大 ${brewsPerDay()} 回</span></button>
+      <button data-act="noon" data-k="gather"><span class="ic">${UIC.gather}</span><b>採取に行く</b><br><span class="muted">素材を ${basketSize()} こ持ち帰る</span></button>
+      <button data-act="noon" data-k="brew" ${S.mats.length ? "" : "disabled"}><span class="ic">${UIC.brew}</span><b>工房で調合する</b><br><span class="muted">最大 ${brewsPerDay()} 回</span></button>
     </div>
     ${S.mats.length ? "" : `<p class="muted">素材がないので、まずは採取に行こう。</p>`}
   </div>`;
@@ -792,18 +824,18 @@ function viewGather() {
       ${UI.result.got.map(m => `<div class="item"><div class="ic">${MATS[m.id].ic}</div><div class="body"><div class="name">${MATS[m.id].name} ${qtag(m.q)}</div>${chips(m.el)}</div></div>`).join("")}
       </div><p><button class="main big" data-act="evening">夕方へ（店を開ける）</button></p></div>`;
   }
-  return `<div class="card"><h2>🧺 どこへ行く？</h2><p class="muted">${weather().ic} ${weather().name} ／ 持ち帰れるのは ${basketSize()} こ</p><div class="list">
+  return `<div class="card"><h2>${UIC.gather} どこへ行く？</h2><p class="muted">${weather().ic} ${weather().name} ／ 持ち帰れるのは ${basketSize()} こ</p><div class="list">
     ${Object.entries(PLACES).map(([k, p]) => {
       const open = placeOpen(k);
       return `<div class="item ${open ? "click" : "off"}" ${open ? `data-act="gather" data-k="${k}" role="button" tabindex="0"` : ""}>
         <div class="ic">${p.ic}</div><div class="body"><div class="name">${p.name}</div>
-        <div class="muted">${p.desc}${open ? "" : ` ／ 🔒 通行証が必要（夜の買い物・${RANKS[p.rank].name}から）`}</div></div></div>`;
+        <div class="muted">${p.desc}${open ? "" : ` ／ ${UIC.lock}通行証が必要（夜の買い物・${RANKS[p.rank].name}から）`}</div></div></div>`;
     }).join("")}
   </div><p><button data-act="back">もどる</button></p></div>`;
 }
 
 function viewBrew() {
-  let h = `<div class="card"><h2>🫕 調合</h2><p class="muted">今日はあと <b>${S.brewsLeft}</b> 回 調合できる。${kamaBonus() ? "（かまの品質 +" + kamaBonus() + "）" : ""}</p>`;
+  let h = `<div class="card"><h2>${UIC.brew} 調合</h2><p class="muted">今日はあと <b>${S.brewsLeft}</b> 回 調合できる。${kamaBonus() ? "（かまの品質 +" + kamaBonus() + "）" : ""}</p>`;
   if (!UI.recipe) {
     h += `<div class="list">${S.recipes.map(k => {
       const r = RECIPES[k], ok = canBrew(k) && S.brewsLeft > 0;
@@ -847,7 +879,7 @@ function viewEvening() {
     const shown = UI.log.slice(0, UI.shown);
     const done = !UI.running;
     const sum = S.today.sales.reduce((s, e) => s + e.money, 0);
-    return `<div class="card"><h2>🏪 お店をあけた</h2>
+    return `<div class="card"><h2>${UIC.shop} お店をあけた</h2>
       <div class="log">${shown.map(e => `<div>${e.t}</div>`).join("")}${done ? "" : "<div class='muted'>……</div>"}</div>
       ${done ? `<p>今日の売り上げ：<b>${sum}G</b>（${S.today.sales.length}こ）</p><p><button class="main big" data-act="night">店をしめて夜へ</button></p>`
              : `<p><button data-act="skip">早送り</button></p>`}</div>`;
@@ -856,7 +888,7 @@ function viewEvening() {
   const onShelf = new Set(UI.shelf.map(s => s.uid));
   const reserved = new Set(S.orders.map(o => orderCandidate(o)).filter(Boolean).map(x => x.uid));
   const sorted = [...S.items].sort((a, b) => a.id.localeCompare(b.id) || b.q - a.q);
-  let h = `<div class="card"><h2>🌇 夕方のお店</h2>
+  let h = `<div class="card"><h2>${UIC.shop} 夕方のお店</h2>
     <p class="muted">${CATS[S.trend].ic} 今日は${CATS[S.trend].name}が多そう。たなに ${slots} こまで並べられる。</p>
     <h3>たな（${UI.shelf.length}/${slots}）</h3>`;
   if (UI.shelf.length) {
@@ -864,7 +896,7 @@ function viewEvening() {
       const it = S.items.find(x => x.uid === s.uid), r = RECIPES[it.id];
       return `<div class="item"><div class="ic">${r.ic}</div><div class="body"><div class="name">${r.name} ${qtag(it.q)} ${it.trait ? `<span class="trait">${TRAIT[it.trait].name}</span>` : ""}</div>
         <div class="row" style="margin-top:4px">${["low", "mid", "high"].map(l => `<button class="${s.level === l ? "sel" : ""}" style="padding:4px 10px;font-size:14px" data-act="level" data-k="${s.uid}" data-l="${l}">${{ low: "安い", mid: "ふつう", high: "高い" }[l]} ${itemPrice(it, l)}G</button>`).join("")}</div>
-        </div><button data-act="shelf" data-k="${s.uid}" title="おろす">✕</button></div>`;
+        </div><button data-act="shelf" data-k="${s.uid}" >おろす</button></div>`;
     }).join("")}</div>`;
   } else h += `<p class="muted">まだ何も並べていない。</p>`;
   h += `<h3>倉庫の品物</h3>`;
@@ -884,10 +916,10 @@ function viewEvening() {
 function viewNight() {
   const t = S.today;
   const earned = S.money - t.money0, repd = S.rep - t.rep0;
-  let h = `<div class="card"><h2>🌙 夜のまとめ（${S.day}日目）</h2>
+  let h = `<div class="card"><h2>${UIC.night} 夜のまとめ（${S.day}日目）</h2>
     <p>お金 ${earned >= 0 ? `<span class="plus">+${earned}G</span>` : `<span class="minus">${earned}G</span>`} ／ 評判 ${repd >= 0 ? `<span class="plus">+${repd}</span>` : `<span class="minus">${repd}</span>`}</p>
     <p class="muted">売れた数 ${t.sales.length} ／ 倉庫：品物 ${S.items.length}・素材 ${S.mats.length}</p></div>`;
-  h += `<div class="card"><h2>🛒 夜の買い物</h2><p class="muted">所持金 ${S.money}G</p><h3>工房の設備（ヴォルトが導機で強くしてくれる）</h3><div class="list">`;
+  h += `<div class="card"><h2>${UIC.buy} 夜の買い物</h2><p class="muted">所持金 ${S.money}G</p><h3>工房の設備（ヴォルトが導機で強くしてくれる）</h3><div class="list">`;
   for (const [k, u] of Object.entries(UPG)) {
     const lv = S[k], c = u.costs[lv];
     h += `<div class="item"><div class="ic">${u.ic}</div><div class="body"><div class="name">${u.name} Lv${lv + 1}</div>
@@ -926,18 +958,18 @@ function viewEnding() {
     "……驚いた。ノルンでいちばんの工房だそうじゃないか。誇りに思うよ。",
   ];
   return `<div class="card center">
-    <div class="bigicon">🌌</div>
+    <div class="bigicon">${UIC.star}</div>
     <h2>30日がたった</h2>
     <p>師匠が帰ってきた。</p>
     <p style="font-size:18px;line-height:1.9">「ただいま、${esc(S.name)}。<br>${words[ri]}」</p>
     <h3>けっか</h3>
     <div class="list" style="text-align:left">
-      <div class="item"><div class="ic">⭐</div><div class="body"><div class="name">工房のランク：${RANKS[ri].name}</div><div class="muted">評判 ${S.rep}</div></div></div>
-      <div class="item"><div class="ic">💰</div><div class="body"><div class="name">所持金 ${S.money}G</div><div class="muted">これまでの売り上げ ${S.stats.earned}G ／ 売った数 ${S.stats.sold}</div></div></div>
-      <div class="item"><div class="ic">📜</div><div class="body"><div class="name">物語の依頼 ${sd}/6</div><div class="muted">依頼をとどけた数 ${S.stats.orders}</div></div></div>
-      <div class="item"><div class="ic">📕</div><div class="body"><div class="name">図鑑 ${dr}%</div><div class="muted">調合した回数 ${S.stats.brewed}</div></div></div>
+      <div class="item"><div class="ic">${UIC.rank}</div><div class="body"><div class="name">工房のランク：${RANKS[ri].name}</div><div class="muted">評判 ${S.rep}</div></div></div>
+      <div class="item"><div class="ic">${UIC.money}</div><div class="body"><div class="name">所持金 ${S.money}G</div><div class="muted">これまでの売り上げ ${S.stats.earned}G ／ 売った数 ${S.stats.sold}</div></div></div>
+      <div class="item"><div class="ic">${UIC.story}</div><div class="body"><div class="name">物語の依頼 ${sd}/6</div><div class="muted">依頼をとどけた数 ${S.stats.orders}</div></div></div>
+      <div class="item"><div class="ic">${UIC.dex}</div><div class="body"><div class="name">図鑑 ${dr}%</div><div class="muted">調合した回数 ${S.stats.brewed}</div></div></div>
     </div>
-    ${sd === 6 ? `<p>🗡️ ナハトとヴォルトの頼みを、ぜんぶかなえた！</p>` : ""}
+    ${sd === 6 ? `<p>ナハトとヴォルトの頼みを、ぜんぶかなえた！</p>` : ""}
     <p><button class="main big" data-act="relax">のんびりモードで続ける</button></p>
     <p><button class="big" data-act="toTitle">タイトルへ</button></p>
   </div>`;
