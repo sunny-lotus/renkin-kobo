@@ -253,7 +253,7 @@ const CLIENTS = ["宿の常連さん", "見回りの兵士", "鍛冶屋の親方
 
 // 朝の物語（[人, 表情, せりふ]。表情は省略できる）
 const STORY = {
-  1: { talk: [["letter", "しばらく旅に出る。工房の留守をたのむ。\nかまの火を絶やさぬように。三十日ほどで戻る。"], ["info", "昼に素材を集めるか調合して、夕方にはお店をひらこう。\nまずは森か川原へ、素材を集めに行ってみよう。"]] },
+  1: { talk: [["letter", "しばらく旅に出る。工房の留守をたのむ。\nかまの火を絶やさぬように。三十日ほどで戻る。"], ["info", "倉庫には、師匠が作り置きしていった品物と素材が少しある。\n昼に素材を集めるか調合して、夕方にはお店をひらこう。"]] },
   2: { order: { key: "s_potion", item: "potion", minQ: 25, days: 5, money: 80, rep: 5, from: "nacht" },
        talk: [["nacht", "normal", "{name}。昨日はどうも。……ひとつ頼みたい。"], ["nacht", "normal", "回復薬を作ってくれないか。しばらく外の仕事でね。"], ["nacht", "joke", "……別に、心配してくれなくていい。"]] },
   6: { order: { key: "s_fuel", item: "fuel", minQ: 35, days: 5, money: 120, rep: 6, from: "volt", recipe: "oil" },
@@ -316,6 +316,10 @@ function newGame(name) {
     stats: { sold: 0, brewed: 0, orders: 0, earned: 0, talks: 0 }, ended: false,
     aff: Object.fromEntries(CHAR_IDS.map(k => [k, 0])), met: {}, duo: {}, chat: {}, ev: {}, visits: {}, recent: {},
   };
+  // 師匠が置いていった品物と素材（1日目からお店ができるように）
+  const start = [["potion", 42], ["potion", 36], ["fuel", 40], ["soap", 38], ["whet", 35], ["incense", 33]];
+  for (const [id, q] of start) { const el = {}; RECIPES[id].needs.forEach(n => Object.assign(el, addEl(el, MATS[n].el))); S.items.push({ uid: S.uid++, id, q, el, trait: null }); S.seen[id] = true; }
+  for (const id of ["herb", "herb", "water", "water", "sap", "flint"]) { S.mats.push({ uid: S.uid++, id, q: rnd(30, 45), el: { ...MATS[id].el } }); S.seen[id] = true; }
   startDay();
 }
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
