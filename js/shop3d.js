@@ -249,6 +249,8 @@ const Shop3D = (() => {
 
   function loop() {
     raf = requestAnimationFrame(loop);
+    const cv = renderer.domElement;
+    if (root.clientWidth && (cv.width !== Math.round(root.clientWidth * renderer.getPixelRatio()) || cv.height !== Math.round(root.clientHeight * renderer.getPixelRatio()))) resize();
     const t = clock.getElapsedTime();
     for (const f of flick) {
       const n = 0.9 + Math.sin(t * 9.1 + (f.base || 1) * 7) * 0.05 + Math.sin(t * 23.7) * 0.04;

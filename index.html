@@ -789,8 +789,8 @@ function render(hudOnly) {
   const body = document.body;
   if (!S) { body.classList.remove("shop"); teardownShop(); Scenes.show("title"); $("#app").innerHTML = viewTitle(); return; }
   const shop = S.phase === "evening";
+  body.classList.toggle("shop", shop); // 先に表示してから、3Dの大きさを決める
   if (shop) setupShop(); else teardownShop();
-  body.classList.toggle("shop", shop);
   if (!shop) Scenes.show({ morning: "workshop", brew: "workshop", gather: UI.result ? UI.result.place : "forest", night: "night", ending: "night" }[S.phase] || "workshop");
   if (hudOnly) { const h = $(".hud"); if (h) h.outerHTML = hud(); return; }
   const v = { morning: viewMorning, gather: viewGather, brew: viewBrew, evening: viewEvening, night: viewNight, ending: viewEnding }[S.phase]();
