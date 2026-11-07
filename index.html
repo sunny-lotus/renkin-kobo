@@ -176,7 +176,7 @@
   .friends { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
   .friend { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid var(--line-soft); border-radius: 14px; padding: 8px; }
   .friend img { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover; }
-  .hearts { color: #f3a0a8; letter-spacing: 1px; font-size: 13px; }
+  .hearts { color: var(--gold); letter-spacing: 1px; font-size: 13px; }
   .order { border-left: 3px solid var(--w); } .order.story { border-left-color: var(--gold); }
   .bonus { font-size: 13px; color: var(--good); }
   .log { background: rgba(255,255,255,0.04); border: 1px solid var(--line-soft); border-radius: 12px; padding: 10px 12px; max-height: 260px; overflow-y: auto; }
@@ -345,7 +345,7 @@ const basketSize = () => 8 + 3 * S.basket;
 const kamaBonus = () => (S.kama >= 2 ? 5 : 0);
 const inStock = id => (MATS[id] ? S.mats : S.items).filter(m => m.id === id);
 const fill = t => String(t).replace(/\{name\}/g, S ? S.name : "");
-const hearts = a => { const n = Math.min(5, Math.floor(a / 6)); return "♥".repeat(n) + "♡".repeat(5 - n); };
+const hearts = a => { const n = Math.min(5, Math.floor(a / 6)); return "★".repeat(n) + "☆".repeat(5 - n); };
 function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.innerHTML = t; document.body.appendChild(d); setTimeout(() => d.remove(), 1800); }
 
 /* ===================== 会話の箱 ===================== */
@@ -633,7 +633,7 @@ async function smallTalk(k) {
   await playLines(t.c[ans].res, k);
   S.aff[k] += t.c[ans].aff; S.stats.talks++;
   if (!S.chat[k].includes(i)) S.chat[k].push(i);
-  logShop(`${c.name}となかよくなった <span class="hearts">${"♥".repeat(t.c[ans].aff)}</span>`);
+  logShop(`${c.name}と話しこんだ`);
 }
 async function affEvent(k) {
   const c = CHARS[k]; S.ev[k] = S.ev[k] || [];
@@ -659,7 +659,7 @@ function hud() {
   const ri = rankIdx(), next = RANKS[ri + 1];
   return `<header class="hud"><span class="day">${S.ended ? "のんびり " : ""}${S.day}日目</span><span class="phase">${ph}</span>
     <span class="stat">${UIC.money}<b>${S.money}</b>G</span><span class="stat">${UIC.rank}<b>${RANKS[ri].name}</b> 評判${S.rep}${next ? "/" + next.rep : ""}</span>
-    <span class="tools"><button data-act="storage">倉庫</button><button data-act="friends">なかま</button><button data-act="recipes">レシピ</button><button data-act="dex">図鑑</button></span></header>`;
+    <span class="tools"><button data-act="storage">倉庫</button><button data-act="friends">常連さん</button><button data-act="recipes">レシピ</button><button data-act="dex">図鑑</button></span></header>`;
 }
 function orderCard(o) {
   const r = RECIPES[o.item], cand = orderCandidate(o), left = o.due - S.day;
@@ -772,7 +772,7 @@ function viewEnding() {
   const best = CHAR_IDS.filter(k => S.met[k]).sort((a, b) => S.aff[b] - S.aff[a])[0];
   return `<div class="panel center"><div class="bigicon">${UIC.star}</div><h2 style="justify-content:center">30日がたった</h2><p>師匠が帰ってきた。</p>
     <p style="font-size:18px;line-height:1.9;font-family:var(--serif)">「ただいま、${esc(S.name)}。<br>${words[ri]}」</p>
-    ${best ? `<p><img src="${FACE(best, CHARS[best].faces[1])}" alt="" style="width:90px;height:90px;border-radius:50%;border:2px solid var(--gold)"><br>いちばんなかよしになったのは <b>${CHARS[best].name}</b><br><span class="hearts">${hearts(S.aff[best])}</span></p>` : ""}
+    ${best ? `<p><img src="${FACE(best, CHARS[best].faces[1])}" alt="" style="width:90px;height:90px;border-radius:50%;border:2px solid var(--gold)"><br>いちばんの常連さんは <b>${CHARS[best].name}</b><br><span class="hearts">${hearts(S.aff[best])}</span></p>` : ""}
     <div class="list" style="text-align:left">
       <div class="item"><div class="ic">${UIC.rank}</div><div class="body"><div class="name">工房のランク：${RANKS[ri].name}</div><div class="muted">評判 ${S.rep}</div></div></div>
       <div class="item"><div class="ic">${UIC.money}</div><div class="body"><div class="name">所持金 ${S.money}G</div><div class="muted">売り上げ ${S.stats.earned}G ／ 売った数 ${S.stats.sold}</div></div></div>
@@ -814,7 +814,7 @@ function showFriends() {
   const list = CHAR_IDS.map(k => { const c = CHARS[k];
     return S.met[k] ? `<div class="friend"><img src="${FACE(k, c.faces[1])}" alt=""><div><b>${c.name}</b><div class="hearts">${hearts(S.aff[k])}</div><div class="muted">来店 ${S.visits[k] || 0}回</div></div></div>`
       : `<div class="friend"><span class="ico q" style="font-size:40px"><i>？</i></span><div><b>？？？</b><div class="muted">${S.day >= c.from ? "そろそろ来るかも" : "まだ会っていない"}</div></div></div>`; }).join("");
-  modal(`<h2>${UIC.friend} なかま</h2><p class="muted">お店で話したり、いい品を渡したりすると、なかよくなる。なかよくなると、話せることが増える。</p><div class="friends">${list}</div>`);
+  modal(`<h2>${UIC.friend} 常連さん</h2><p class="muted">★は常連度。お店で話したり、いい品を渡したりすると上がる。上がると、話してくれることが増える。</p><div class="friends">${list}</div>`);
 }
 function showRecipes() {
   modal(`<h2>レシピ帳 ${S.recipes.length}/${Object.keys(RECIPES).length}</h2><p class="muted">同じ性質を ${TRAIT_NEED} 以上そろえると特性がつく。特性つきは高く売れる。</p><div class="list">${Object.entries(RECIPES).map(([k, r]) => { const have = S.recipes.includes(k);
