@@ -9,56 +9,145 @@
     --sky-top: #1b2a4a;
     --sky-bottom: #4a6fa5;
     --ring: rgba(255, 244, 214, 0.55);
-    --ink: #fdf8ec;
-    --soft: #d9e3f2;
-    --card: rgba(20, 28, 48, 0.55);
-    --accent: #f2c66d;
+    --paper: #fbf5e6;
+    --paper-2: #f1e6cc;
+    --ink: #3a2e22;
+    --ink-soft: #7a6a55;
+    --line: #d8c7a3;
+    --accent: #b5652b;
+    --accent-2: #2f5d8a;
+    --good: #3c7d4a;
+    --bad: #a6403a;
+    --gold: #c9962e;
+    --f: #d9613f; --w: #3f86c9; --a: #4aa58a; --e: #9a7448; --s: #8a63c9;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; }
+  html, body { margin: 0; }
   body {
     min-height: 100vh;
-    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom)) fixed;
     color: var(--ink);
-    font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 16px;
+    font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic", "Noto Sans JP", sans-serif;
+    font-size: 16px;
     overflow-x: hidden;
   }
-  .rings {
-    position: fixed; inset: 0; pointer-events: none;
-  }
+  body.dusk { background: linear-gradient(180deg, #3a2a4a, #c9785a) fixed; }
+  body.night { background: linear-gradient(180deg, #0c1226, #26355e) fixed; }
+  .rings { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .rings svg { width: 100%; height: 100%; }
-  main {
-    position: relative;
-    max-width: 520px;
-    width: 100%;
-    text-align: center;
-    background: var(--card);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 18px;
-    padding: 40px 24px 32px;
-    backdrop-filter: blur(4px);
+  #app { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; padding: 12px 16px 40px; }
+
+  header.bar {
+    display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center;
+    background: rgba(251, 245, 230, 0.94); border-radius: 14px; padding: 10px 14px; margin-bottom: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
   }
-  .flask { font-size: 56px; line-height: 1; }
-  h1 {
-    margin: 16px 0 8px;
-    font-size: clamp(26px, 7vw, 36px);
-    letter-spacing: 0.08em;
+  .bar .day { font-weight: bold; font-size: 18px; }
+  .bar .stat { font-size: 14px; color: var(--ink-soft); }
+  .bar .stat b { color: var(--ink); }
+  .bar .tools { margin-left: auto; display: flex; gap: 6px; }
+  .bar .tools button { padding: 6px 10px; font-size: 14px; }
+
+  .card {
+    background: var(--paper); border-radius: 16px; padding: 18px 16px; margin-bottom: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
   }
-  .sub { color: var(--soft); margin: 0 0 28px; font-size: 15px; }
-  .badge {
-    display: inline-block;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    border-radius: 999px;
-    padding: 6px 18px;
-    font-size: 15px;
-    letter-spacing: 0.15em;
+  .card h2 { margin: 0 0 10px; font-size: 20px; }
+  .card h3 { margin: 14px 0 8px; font-size: 16px; color: var(--accent); }
+  .muted { color: var(--ink-soft); font-size: 14px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .grow { flex: 1; }
+
+  button {
+    font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line);
+    background: #fff; color: var(--ink); padding: 10px 14px;
   }
-  p.note { color: var(--soft); font-size: 14px; line-height: 1.8; margin: 24px 0 0; }
+  button:hover:not(:disabled) { background: var(--paper-2); }
+  button:disabled { opacity: 0.45; cursor: default; }
+  button.main { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: bold; }
+  button.main:hover:not(:disabled) { background: #9c5422; }
+  button.blue { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+  button.blue:hover:not(:disabled) { background: #244a70; }
+  button.big { width: 100%; padding: 16px; font-size: 18px; }
+  button.sel { outline: 3px solid var(--accent); }
+  .choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 420px) { .choice { grid-template-columns: 1fr; } }
+  .choice button { text-align: left; padding: 14px; }
+  .choice .ic { font-size: 28px; display: block; margin-bottom: 4px; }
+
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .item {
+    display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--line);
+    border-radius: 12px; padding: 10px 12px;
+  }
+  .item .ic { font-size: 26px; width: 34px; text-align: center; flex-shrink: 0; }
+  .item .body { flex: 1; min-width: 0; }
+  .item .name { font-weight: bold; }
+  .item.click { cursor: pointer; }
+  .item.click:hover { background: var(--paper-2); }
+  .item.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+  .item.off { opacity: 0.5; }
+
+  .chips { display: inline-flex; gap: 4px; flex-wrap: wrap; vertical-align: middle; }
+  .chip { font-size: 12px; padding: 1px 7px; border-radius: 999px; color: #fff; }
+  .chip.f { background: var(--f); } .chip.w { background: var(--w); } .chip.a { background: var(--a); }
+  .chip.e { background: var(--e); } .chip.s { background: var(--s); }
+  .q { display: inline-block; font-size: 12px; padding: 1px 7px; border-radius: 6px; background: var(--paper-2); }
+  .q.hi { background: #f6d98b; } .q.top { background: #f2b35c; }
+  .trait { font-size: 12px; color: var(--accent); font-weight: bold; }
+  .tag { font-size: 12px; padding: 1px 7px; border-radius: 6px; background: #e4eef8; color: var(--accent-2); }
+
+  .slots { display: flex; gap: 8px; flex-wrap: wrap; }
+  .slot {
+    min-width: 92px; border: 2px dashed var(--line); border-radius: 12px; padding: 8px; text-align: center; background: #fff;
+  }
+  .slot.full { border-style: solid; border-color: var(--accent); }
+
+  .log { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; max-height: 320px; overflow-y: auto; }
+  .log div { padding: 4px 0; border-bottom: 1px dotted var(--line); }
+  .log div:last-child { border-bottom: none; }
+  .plus { color: var(--good); font-weight: bold; }
+  .minus { color: var(--bad); font-weight: bold; }
+
+  .overlay {
+    position: fixed; inset: 0; background: rgba(10, 14, 30, 0.55); z-index: 10;
+    display: flex; align-items: flex-end; justify-content: center; padding: 16px;
+  }
+  .overlay.center { align-items: center; }
+  .talk {
+    width: 100%; max-width: 600px; background: var(--paper); border-radius: 16px; padding: 16px 18px 14px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35); cursor: pointer;
+  }
+  .talk .who { font-weight: bold; color: var(--accent); margin-bottom: 6px; font-size: 15px; }
+  .talk .who .ic { font-size: 22px; margin-right: 6px; vertical-align: middle; }
+  .talk .text { font-size: 17px; line-height: 1.8; min-height: 3.6em; white-space: pre-wrap; }
+  .talk .next { text-align: right; color: var(--ink-soft); font-size: 13px; }
+  .modal {
+    width: 100%; max-width: 560px; max-height: 86vh; overflow-y: auto; background: var(--paper); border-radius: 16px;
+    padding: 18px 16px; box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  }
+  .modal h2 { margin: 0 0 10px; font-size: 20px; }
+
+  .title { text-align: center; padding: 40px 18px 28px; }
+  .title .flask { font-size: 60px; }
+  .title h1 { margin: 10px 0 6px; font-size: clamp(28px, 8vw, 40px); letter-spacing: 0.08em; }
+  .title input {
+    font: inherit; font-size: 18px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line);
+    width: 100%; max-width: 260px; text-align: center;
+  }
+  .bigicon { font-size: 44px; text-align: center; }
+  .center { text-align: center; }
+  .order { border-left: 5px solid var(--accent-2); }
+  .order.story { border-left-color: var(--gold); }
+  .bonus { font-size: 13px; color: var(--good); }
+  .tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tabs button { padding: 6px 12px; font-size: 14px; }
+  .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .grid-dex { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+  .dex { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px; text-align: center; font-size: 13px; }
+  .dex .ic { font-size: 28px; }
+  .dex.unknown { color: var(--ink-soft); }
+  .pill { display: inline-block; font-size: 13px; padding: 2px 10px; border-radius: 999px; background: var(--paper-2); }
 </style>
 </head>
 <body>
@@ -72,12 +161,849 @@
       </g>
     </svg>
   </div>
-  <main>
-    <div class="flask" aria-hidden="true">⚗️</div>
+  <div id="app"></div>
+  <div id="layer"></div>
+
+<script>
+"use strict";
+/* ===================== データ ===================== */
+const EL = { f: "火", w: "水", a: "風", e: "土", s: "星" };
+const TRAIT = {
+  f: { name: "長く燃える", mult: 1.25 },
+  w: { name: "よく効く", mult: 1.25 },
+  a: { name: "軽やか", mult: 1.25 },
+  e: { name: "丈夫", mult: 1.25 },
+  s: { name: "きらめく", mult: 1.5 },
+};
+const TRAIT_NEED = 4;
+
+const MATS = {
+  herb:     { name: "薬草",       ic: "🌿", el: { w: 1, e: 1 } },
+  nut:      { name: "木の実",     ic: "🌰", el: { e: 2 } },
+  sap:      { name: "樹液",       ic: "🍯", el: { f: 1, w: 1 } },
+  mush:     { name: "きのこ",     ic: "🍄", el: { e: 1, a: 1 } },
+  water:    { name: "清水",       ic: "💧", el: { w: 2 } },
+  stone:    { name: "川石",       ic: "🪨", el: { e: 2 } },
+  crystal:  { name: "水晶のかけら", ic: "💎", el: { a: 1, e: 1 } },
+  flower:   { name: "野の花",     ic: "🌼", el: { a: 1, w: 1 } },
+  feather:  { name: "羽根",       ic: "🪶", el: { a: 2 } },
+  flint:    { name: "火打ち石",   ic: "🔥", el: { f: 2 } },
+  iron:     { name: "鉄くず",     ic: "🔩", el: { e: 2, f: 1 } },
+  sulfur:   { name: "硫黄",       ic: "🟡", el: { f: 2, a: 1 } },
+  lakeweed: { name: "湖の藻",     ic: "🌱", el: { w: 2, a: 1 } },
+  stardrop: { name: "星のしずく", ic: "✨", el: { s: 2, w: 1 } },
+};
+
+const PLACES = {
+  forest: { name: "東の森",     ic: "🌲", mats: { herb: 4, nut: 3, sap: 3, mush: 3 }, q: [10, 60], desc: "薬草や木の実がとれる" },
+  river:  { name: "川原",       ic: "🏞️", mats: { water: 4, stone: 4, crystal: 2 }, q: [10, 60], desc: "清水と石がとれる" },
+  hill:   { name: "風見の丘",   ic: "⛰️", mats: { flower: 4, feather: 3, flint: 3 }, q: [10, 60], desc: "花・羽根・火打ち石" },
+  mine:   { name: "古い鉱山",   ic: "⛏️", mats: { iron: 4, sulfur: 3, crystal: 2, stone: 2 }, q: [25, 75], pass: 150, rank: 1, desc: "鉄くずと硫黄。質がよい" },
+  lake:   { name: "星見の湖",   ic: "🌌", mats: { lakeweed: 4, stardrop: 3, water: 2 }, q: [40, 90], pass: 300, rank: 2, desc: "星のしずくは晴れの日だけ" },
+};
+
+const CATS = {
+  adv:  { name: "冒険者",       ic: "🧭" },
+  town: { name: "町の人",       ic: "🧺" },
+  doki: { name: "導機屋の職人", ic: "🛠️" },
+};
+
+// needs: 素材ID または 品物ID
+const RECIPES = {
+  potion:   { name: "回復薬",         ic: "🧪", needs: ["herb", "water"],              value: 40,  cat: "adv",  get: "start" },
+  fuel:     { name: "導機灯の燃料",   ic: "🪔", needs: ["sap", "flint"],               value: 45,  cat: "doki", get: "start" },
+  soap:     { name: "せっけん",       ic: "🧼", needs: ["flower", "sap"],              value: 35,  cat: "town", get: "start" },
+  incense:  { name: "虫よけの香",     ic: "🕯️", needs: ["mush", "flower"],             value: 35,  cat: "town", get: "start" },
+  whet:     { name: "研ぎ粉",         ic: "🌫️", needs: ["stone", "flint"],             value: 40,  cat: "adv",  get: "start" },
+  antidote: { name: "解毒薬",         ic: "💊", needs: ["herb", "mush", "water"],      value: 70,  cat: "adv",  get: "book", price: 80 },
+  ration:   { name: "保存食",         ic: "🥫", needs: ["nut", "sap", "water"],        value: 60,  cat: "town", get: "book", price: 60 },
+  charm:    { name: "風のお守り",     ic: "🧿", needs: ["feather", "crystal"],         value: 65,  cat: "adv",  get: "book", price: 100 },
+  oil:      { name: "導機の潤滑油",   ic: "🛢️", needs: ["iron", "sap"],                value: 80,  cat: "doki", get: "story" },
+  gear:     { name: "導機の歯車",     ic: "⚙️", needs: ["iron", "iron", "flint"],      value: 120, cat: "doki", get: "book", price: 180 },
+  lampoil:  { name: "長持ち灯油",     ic: "🏮", needs: ["fuel", "sulfur"],             value: 110, cat: "doki", get: "book", price: 150 },
+  hipotion: { name: "上級回復薬",     ic: "⚗️", needs: ["potion", "herb", "lakeweed"], value: 140, cat: "adv",  get: "book", price: 200 },
+  ink:      { name: "星砂のインク",   ic: "🖋️", needs: ["crystal", "stardrop"],        value: 130, cat: "town", get: "book", price: 220 },
+  perfume:  { name: "星明かりの香水", ic: "🌸", needs: ["flower", "stardrop", "water"], value: 160, cat: "town", get: "book", price: 250 },
+  amulet:   { name: "守り刀の護符",   ic: "🗡️", needs: ["charm", "iron", "stardrop"],  value: 220, cat: "adv",  get: "story" },
+};
+
+const RANKS = [
+  { name: "見習い", rep: 0 },
+  { name: "駆け出し", rep: 20 },
+  { name: "一人前", rep: 50 },
+  { name: "腕利き", rep: 100 },
+  { name: "町いちばん", rep: 170 },
+];
+
+const UPG = {
+  kama:   { name: "かまの導機", ic: "🫕", costs: [150, 300], desc: ["1日に調合できる回数 +1", "品質 +5"] },
+  shelf:  { name: "たな",       ic: "🗄️", costs: [120, 250], desc: ["並べられる数 +2"] },
+  basket: { name: "採取かご",   ic: "🧺", costs: [80, 200],  desc: ["1回の採取で持ち帰る数 +3"] },
+};
+
+const WEATHER = [
+  { id: "sun",   name: "晴れ",   ic: "☀️" },
+  { id: "cloud", name: "くもり", ic: "☁️" },
+  { id: "rain",  name: "雨",     ic: "🌧️" },
+  { id: "wind",  name: "風",     ic: "🍃" },
+];
+
+const PEOPLE = {
+  volt:   { name: "ヴォルト",         ic: "🔧" },
+  nacht:  { name: "ナハト",           ic: "🗡️" },
+  okami:  { name: "銀鹿亭の女主人",   ic: "🍺" },
+  letter: { name: "師匠の手紙",       ic: "✉️" },
+  me:     { name: "",                 ic: "⚗️" },
+  info:   { name: "",                 ic: "📜" },
+};
+
+const CLIENTS = ["宿の常連さん", "見回りの兵士", "鍛冶屋の親方", "パン屋のおかみさん", "旅の商人", "導機屋の親方", "郵便配達の人", "子ども連れのお母さん"];
+
+const STORY = {
+  1: {
+    talk: [
+      ["letter", "しばらく旅に出る。工房の留守をたのむ。\nかまの火を絶やさぬように。三十日ほどで戻る。"],
+      ["volt", "おまえが新しい店番か。師匠さんに頼まれてな、かまの導機だけ見に来た。"],
+      ["volt", "……よし、動く。昼に素材を集めるか調合して、夕方に店を開ける。それだけだ。簡単だろ？"],
+      ["volt", "簡単じゃないって顔だな。まあ、最初はみんなそうだ。まずは森と川原で素材を集めてこい。"],
+    ],
+  },
+  2: {
+    talk: [
+      ["nacht", "ヴォルトが言ってた新しい店主って、あんたか。"],
+      ["nacht", "回復薬、作れるか？　しばらく外の仕事でね。……別に、心配してくれなくていい。"],
+    ],
+    order: { key: "s_potion", item: "potion", minQ: 25, days: 5, money: 80, rep: 5, from: "nacht" },
+  },
+  6: {
+    talk: [
+      ["volt", "町の導機灯の燃料が足りなくてな。作れるなら回してくれ。"],
+      ["volt", "礼はする。導機の潤滑油の作り方、教えてやるよ。おまえにしか頼めない……ってほどでもないけどな。"],
+    ],
+    order: { key: "s_fuel", item: "fuel", minQ: 35, days: 5, money: 120, rep: 6, from: "volt", recipe: "oil" },
+  },
+  10: {
+    talk: [
+      ["okami", "うちの宿、備えの保存食がほしいのよ。"],
+      ["okami", "作り方の本なら、夜の買い物で手に入るはず。お願いできる？"],
+    ],
+    order: { key: "s_ration", item: "ration", minQ: 40, days: 6, money: 150, rep: 8, from: "okami" },
+  },
+  14: {
+    talk: [
+      ["nacht", "風のお守り、ってのがあるらしいな。ヴォルトがやたら勧めてくる。"],
+      ["nacht", "……俺は要らないって言ったんだけどな。まあ、あいつがうるさいから。"],
+    ],
+    order: { key: "s_charm", item: "charm", minQ: 45, days: 6, money: 200, rep: 8, from: "nacht" },
+  },
+  20: {
+    talk: [
+      ["volt", "長持ちする灯油がほしい。夜の見回りの灯が、すぐ消えるんだ。"],
+      ["volt", "燃料に硫黄を足すらしい。鉱山の通行証、もう持ってるか？"],
+    ],
+    order: { key: "s_lamp", item: "lampoil", minQ: 50, days: 6, money: 300, rep: 10, from: "volt" },
+  },
+  24: {
+    talk: [
+      ["letter", "もうすぐ戻る。護符の作り方を同封しておく。\nきっと、だれかが必要とするはずだ。"],
+      ["info", "「守り刀の護符」のレシピを手に入れた！"],
+      ["nacht", "護符？　……ああ、ヴォルトの差し金か。"],
+      ["nacht", "期限は月末でいい。急がなくていいからな。"],
+    ],
+    recipe: "amulet",
+    order: { key: "s_amulet", item: "amulet", minQ: 50, days: 6, money: 400, rep: 15, from: "nacht" },
+  },
+};
+
+const DONE_TALK = {
+  s_potion: [["nacht", "……悪くない。ありがたく使わせてもらう。"]],
+  s_fuel:   [["volt", "助かった。約束どおり、潤滑油の作り方だ。"], ["info", "「導機の潤滑油」のレシピを手に入れた！"]],
+  s_ration: [["okami", "まあ、ちゃんとしてる。これで安心ね。うちのお客にも宣伝しておくわ。"]],
+  s_charm:  [["nacht", "軽いな。……持っておくよ。ヴォルトには言うなよ。"]],
+  s_lamp:   [["volt", "おお、ずっと消えない。おまえ、腕上げたな。"]],
+  s_amulet: [["nacht", "……。"], ["nacht", "いや、なんでもない。大事にする。"]],
+};
+
+/* ===================== 状態 ===================== */
+const SAVE_KEY = "renkin-kobo-save-v1";
+let S = null;      // ゲームの状態
+let UI = {};       // 画面だけの一時的な状態
+
+function newGame(name) {
+  const recipes = Object.keys(RECIPES).filter(k => RECIPES[k].get === "start");
+  S = {
+    v: 1, name: name || "リーネ", day: 1, phase: "morning",
+    money: 100, rep: 0,
+    mats: [], items: [],
+    recipes, kama: 0, shelf: 0, basket: 0, passes: [],
+    orders: [], seen: {}, made: {},
+    weather: "sun", trend: "adv",
+    storyDone: [], storyFail: [],
+    brewsLeft: 0, today: null, uid: 1,
+    stats: { sold: 0, brewed: 0, orders: 0, earned: 0 },
+    talked: 0, ended: false,
+  };
+  startDay(true);
+}
+
+function save() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); return true; } catch (e) { return false; }
+}
+function loadSave() {
+  try {
+    const t = localStorage.getItem(SAVE_KEY);
+    if (!t) return null;
+    const d = JSON.parse(t);
+    return d && d.v === 1 ? d : null;
+  } catch (e) { return null; }
+}
+
+/* ===================== 便利関数 ===================== */
+const $ = s => document.querySelector(s);
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+function wpick(obj) {
+  const ent = Object.entries(obj);
+  let t = ent.reduce((s, [, w]) => s + w, 0), r = Math.random() * t;
+  for (const [k, w] of ent) { r -= w; if (r < 0) return k; }
+  return ent[0][0];
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function info(id) { return MATS[id] || RECIPES[id]; }
+function rankIdx(rep = S.rep) { let i = 0; RANKS.forEach((r, k) => { if (rep >= r.rep) i = k; }); return i; }
+function chips(el) {
+  return '<span class="chips">' + Object.keys(EL).filter(k => el[k]).map(k => `<span class="chip ${k}">${EL[k]}${el[k]}</span>`).join("") + "</span>";
+}
+function qtag(q) { return `<span class="q ${q >= 80 ? "top" : q >= 60 ? "hi" : ""}">品質${q}</span>`; }
+function addEl(a, b) { const r = { ...a }; for (const k in b) r[k] = (r[k] || 0) + b[k]; return r; }
+function traitOf(el) {
+  let best = null, v = 0;
+  for (const k in el) if (el[k] > v || (el[k] === v && k === "s")) { v = el[k]; best = k; }
+  return v >= TRAIT_NEED ? best : null;
+}
+function itemPrice(it, level = "mid") {
+  const r = RECIPES[it.id];
+  let p = r.value * (0.5 + it.q / 100);
+  if (it.trait) p *= TRAIT[it.trait].mult;
+  p *= { low: 0.8, mid: 1, high: 1.3 }[level];
+  return Math.round(p);
+}
+function weather() { return WEATHER.find(w => w.id === S.weather); }
+function brewsPerDay() { return 3 + Math.min(S.kama, 2); }
+function shelfSize() { return 4 + 2 * S.shelf; }
+function basketSize() { return 8 + 3 * S.basket; }
+function kamaBonus() { return S.kama >= 2 ? 5 : 0; }
+function inStock(id) { return MATS[id] ? S.mats.filter(m => m.id === id) : S.items.filter(m => m.id === id); }
+function seen(id) { S.seen[id] = true; }
+
+/* ===================== 1日の進行 ===================== */
+function startDay(first) {
+  S.phase = "morning";
+  S.weather = pick(WEATHER).id;
+  S.trend = pick(Object.keys(CATS));
+  S.today = { sales: [], money0: S.money, rep0: S.rep, notes: [] };
+  UI = {};
+  // 期限切れ
+  const keep = [];
+  for (const o of S.orders) {
+    if (S.day > o.due) {
+      const lose = o.story ? 3 : 2;
+      S.rep = Math.max(0, S.rep - lose);
+      S.today.notes.push(`依頼「${RECIPES[o.item].name}」の期限が切れた（評判 -${lose}）`);
+      if (o.story) S.storyFail.push(o.key);
+    } else keep.push(o);
+  }
+  S.orders = keep;
+  // 物語
+  const st = S.ended ? null : STORY[S.day];
+  if (st) {
+    if (st.recipe && !S.recipes.includes(st.recipe)) S.recipes.push(st.recipe);
+    if (st.order) {
+      const o = st.order;
+      S.orders.unshift({ key: o.key, item: o.item, minQ: o.minQ, due: S.day + o.days, money: o.money, rep: o.rep, from: PEOPLE[o.from].name, story: true, recipe: o.recipe || null });
+    }
+  }
+  // ふつうの依頼
+  const normal = S.orders.filter(o => !o.story).length;
+  if (normal < 2 && S.day > 1 && Math.random() < 0.7) S.orders.push(randomOrder());
+  if (S.day === 3 && !S.orders.some(o => !o.story)) S.orders.push(randomOrder());
+  save();
+  render();
+  if (st) talk(st.talk);
+}
+
+function randomOrder() {
+  const pool = S.recipes.filter(k => k !== "amulet");
+  const item = pick(pool);
+  const r = RECIPES[item];
+  const ri = rankIdx();
+  return {
+    key: "o" + (S.uid++), item, minQ: Math.min(85, 20 + ri * 10 + rnd(0, 10)), due: S.day + rnd(4, 7),
+    money: Math.round(r.value * 1.6 + ri * 10), rep: 3, from: pick(CLIENTS), story: false,
+  };
+}
+
+function goNoon(kind) {
+  S.phase = kind;
+  if (kind === "brew") { S.brewsLeft = brewsPerDay(); UI.recipe = null; UI.pickSel = []; }
+  if (kind === "gather") { UI.result = null; }
+  save(); render();
+}
+function goEvening() {
+  S.phase = "evening";
+  UI.shelf = []; UI.log = null; UI.running = false;
+  save(); render();
+}
+function goNight() {
+  S.phase = "night";
+  save(); render();
+}
+function sleep() {
+  if (S.day >= 30 && !S.ended) { S.phase = "ending"; save(); render(); return; }
+  S.day++;
+  startDay();
+}
+
+/* ===================== 採取 ===================== */
+function placeOpen(id) {
+  const p = PLACES[id];
+  return !p.pass || S.passes.includes(id);
+}
+function gather(id) {
+  const p = PLACES[id];
+  const w = { ...p.mats };
+  if (S.weather === "rain") { if (w.herb) w.herb += 3; if (w.mush) w.mush += 3; if (w.water) w.water += 2; }
+  if (S.weather === "wind" && w.feather) w.feather += 4;
+  if (S.weather !== "sun" && w.stardrop) w.stardrop = 0.4;
+  const got = [];
+  for (let i = 0; i < basketSize(); i++) {
+    const id2 = wpick(w);
+    let q = rnd(p.q[0], p.q[1]);
+    if (S.weather === "sun") q += 3;
+    q = Math.max(1, Math.min(100, q));
+    const el = { ...MATS[id2].el };
+    if (Math.random() < 0.25) { const k = pick(["f", "w", "a", "e"]); el[k] = (el[k] || 0) + 1; }
+    const m = { uid: S.uid++, id: id2, q, el };
+    S.mats.push(m); got.push(m); seen(id2);
+  }
+  UI.result = { place: id, got };
+  save(); render();
+}
+
+/* ===================== 調合 ===================== */
+function canBrew(rid) {
+  const need = {};
+  RECIPES[rid].needs.forEach(n => need[n] = (need[n] || 0) + 1);
+  return Object.keys(need).every(n => inStock(n).length >= need[n]);
+}
+function selectRecipe(rid) {
+  UI.recipe = rid;
+  // それぞれの欄に、いちばん品質の高いものを最初から入れておく
+  const used = new Set();
+  UI.pickSel = RECIPES[rid].needs.map(n => {
+    const c = inStock(n).filter(x => !used.has(x.uid)).sort((a, b) => b.q - a.q)[0];
+    if (c) used.add(c.uid);
+    return c ? c.uid : null;
+  });
+  UI.slot = null;
+  render();
+}
+function previewBrew() {
+  const r = RECIPES[UI.recipe];
+  const parts = UI.pickSel.map((u, i) => (MATS[r.needs[i]] ? S.mats : S.items).find(x => x.uid === u)).filter(Boolean);
+  if (parts.length !== r.needs.length) return null;
+  const q = Math.round(parts.reduce((s, p) => s + p.q, 0) / parts.length) + kamaBonus();
+  let el = {};
+  parts.forEach(p => el = addEl(el, p.el));
+  return { parts, q: Math.min(100, q), el, trait: traitOf(el) };
+}
+function doBrew() {
+  const pv = previewBrew();
+  if (!pv || S.brewsLeft <= 0) return;
+  const r = RECIPES[UI.recipe];
+  r.needs.forEach((n, i) => {
+    const arr = MATS[n] ? S.mats : S.items;
+    const k = arr.findIndex(x => x.uid === UI.pickSel[i]);
+    if (k >= 0) arr.splice(k, 1);
+  });
+  const q = Math.max(1, Math.min(100, pv.q + rnd(-3, 3)));
+  const it = { uid: S.uid++, id: UI.recipe, q, el: pv.el, trait: pv.trait };
+  S.items.push(it); seen(UI.recipe);
+  S.made[UI.recipe] = (S.made[UI.recipe] || 0) + 1;
+  S.brewsLeft--; S.stats.brewed++;
+  const lines = [["info", `${r.ic} ${r.name}ができた！　品質${q}` + (it.trait ? `\n特性「${TRAIT[it.trait].name}」がついた！` : "")]];
+  // ひらめき
+  const locked = Object.keys(RECIPES).filter(k => RECIPES[k].get === "book" && !S.recipes.includes(k));
+  if (locked.length && Math.random() < 0.1) {
+    const k = pick(locked);
+    S.recipes.push(k);
+    lines.push(["me", `……ひらめいた！　「${RECIPES[k].name}」の作り方が分かった気がする。`]);
+  }
+  UI.recipe = null; UI.pickSel = [];
+  save(); render();
+  talk(lines);
+}
+
+/* ===================== 依頼 ===================== */
+function orderCandidate(o) {
+  return S.items.filter(x => x.id === o.item && x.q >= o.minQ).sort((a, b) => a.q - b.q)[0];
+}
+function deliver(key) {
+  const o = S.orders.find(x => x.key === key);
+  const it = o && orderCandidate(o);
+  if (!it) return;
+  S.items.splice(S.items.indexOf(it), 1);
+  S.orders.splice(S.orders.indexOf(o), 1);
+  S.money += o.money; S.rep += o.rep; S.stats.orders++; S.stats.earned += o.money;
+  if (o.recipe && !S.recipes.includes(o.recipe)) S.recipes.push(o.recipe);
+  if (o.story) S.storyDone.push(o.key);
+  save(); render();
+  const lines = [["info", `${o.from}に「${RECIPES[o.item].name}」をとどけた！\n${o.money}G と 評判 +${o.rep}`]];
+  talk(o.story ? (DONE_TALK[o.key] || []).concat(lines) : lines);
+}
+
+/* ===================== 店 ===================== */
+function toggleShelf(uid) {
+  const i = UI.shelf.findIndex(s => s.uid === uid);
+  if (i >= 0) UI.shelf.splice(i, 1);
+  else if (UI.shelf.length < shelfSize()) UI.shelf.push({ uid, level: "mid" });
+  render();
+}
+function setLevel(uid, level) {
+  const s = UI.shelf.find(x => x.uid === uid);
+  if (s) s.level = level;
+  render();
+}
+function autoShelf() {
+  UI.shelf = [];
+  const reserved = new Set(S.orders.map(o => orderCandidate(o)).filter(Boolean).map(x => x.uid));
+  const list = S.items.filter(x => !reserved.has(x.uid)).sort((a, b) => itemPrice(b) - itemPrice(a));
+  for (const it of list) { if (UI.shelf.length >= shelfSize()) break; UI.shelf.push({ uid: it.uid, level: "mid" }); }
+  render();
+}
+function openShop() {
+  const n = Math.min(12, 4 + Math.floor(S.rep / 15));
+  const log = [];
+  const shelf = UI.shelf.map(s => ({ ...s, it: S.items.find(x => x.uid === s.uid) })).filter(s => s.it);
+  for (let i = 0; i < n; i++) {
+    const w = { adv: 1, town: 1, doki: 1 }; w[S.trend] = 2.5;
+    const cat = wpick(w);
+    const c = CATS[cat];
+    const any = Math.random() < 0.25; // 4人に1人は、なんでも見てくれる
+    const cands = shelf.filter(s => !s.sold && (any || RECIPES[s.it.id].cat === cat)).sort((a, b) => b.it.q - a.it.q);
+    if (!cands.length) { log.push({ t: `${c.ic} ${c.name}が来た。……ほしい物がなくて帰っていった。`, cls: "" }); continue; }
+    const s = cands[0];
+    const p = { low: 0.95, mid: 0.75, high: 0.45 }[s.level] + (s.it.q - 50) / 200 + (s.it.trait ? 0.1 : 0);
+    const name = RECIPES[s.it.id].name;
+    if (Math.random() < p) {
+      const price = itemPrice(s.it, s.level);
+      let rep = 1 + (s.it.q >= 70 ? 1 : 0) + (s.level === "low" ? 1 : 0);
+      s.sold = true;
+      log.push({ t: `${c.ic} ${c.name}が「${name}」を買った！ <span class="plus">+${price}G</span>`, money: price, rep, item: s.it });
+    } else {
+      const lose = s.level === "high" ? 1 : 0;
+      log.push({ t: `${c.ic} ${c.name}は「${name}」を手に取ったけど、やめた。` + (lose ? ` <span class="minus">評判 -1</span>` : ""), rep: -lose });
+    }
+  }
+  UI.log = log; UI.shown = 0; UI.running = true;
+  render();
+  stepLog();
+}
+function stepLog() {
+  if (!UI.running) return;
+  if (UI.shown >= UI.log.length) { finishShop(); return; }
+  UI.shown++;
+  render();
+  UI.timer = setTimeout(stepLog, 650);
+}
+function skipLog() { clearTimeout(UI.timer); UI.shown = UI.log.length; finishShop(); }
+function finishShop() {
+  if (!UI.running) return;
+  UI.running = false;
+  for (const e of UI.log) {
+    if (e.money) {
+      S.money += e.money; S.stats.sold++; S.stats.earned += e.money;
+      const k = S.items.indexOf(e.item); if (k >= 0) S.items.splice(k, 1);
+      S.today.sales.push(e);
+    }
+    if (e.rep) S.rep = Math.max(0, S.rep + e.rep);
+  }
+  save(); render();
+}
+
+/* ===================== 夜の買い物 ===================== */
+function buyUpg(k) {
+  const u = UPG[k], lv = S[k], c = u.costs[lv];
+  if (c == null || S.money < c) return;
+  S.money -= c; S[k]++;
+  save(); render();
+  talk([["volt", pick(["導機をちょっといじっておいた。前よりよく動くはずだ。", "ほら、できたぞ。代金はもらったからな。", "義足の調整より楽だな、これ。"])]]);
+}
+function buyBook(k) {
+  const r = RECIPES[k];
+  if (S.money < r.price || S.recipes.includes(k)) return;
+  S.money -= r.price; S.recipes.push(k);
+  save(); render();
+}
+function buyPass(k) {
+  const p = PLACES[k];
+  if (S.money < p.pass || S.passes.includes(k) || rankIdx() < p.rank) return;
+  S.money -= p.pass; S.passes.push(k);
+  save(); render();
+}
+
+/* ===================== 会話 ===================== */
+function talk(lines, done) {
+  if (!lines || !lines.length) { if (done) done(); return; }
+  let i = 0;
+  const layer = $("#layer");
+  const show = () => {
+    const [who, text] = lines[i];
+    const p = PEOPLE[who];
+    const nm = who === "me" ? S.name : p.name;
+    layer.innerHTML = `<div class="overlay"><div class="talk" role="button" tabindex="0">
+      ${nm ? `<div class="who"><span class="ic">${p.ic}</span>${esc(nm)}</div>` : `<div class="who"><span class="ic">${p.ic}</span></div>`}
+      <div class="text">${esc(text.replace(/\{name\}/g, S.name))}</div>
+      <div class="next">${i < lines.length - 1 ? "▼ タップで次へ" : "▼ タップでとじる"}</div></div></div>`;
+    const el = layer.querySelector(".talk");
+    el.focus();
+    const go = () => { i++; if (i < lines.length) show(); else { layer.innerHTML = ""; if (done) done(); } };
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  };
+  show();
+}
+
+function modal(html) {
+  $("#layer").innerHTML = `<div class="overlay center" data-close="1"><div class="modal">${html}
+    <div class="row" style="margin-top:14px"><button class="grow" data-act="closeModal">とじる</button></div></div></div>`;
+}
+function closeModal() { $("#layer").innerHTML = ""; }
+
+function showStorage(tab = UI.stTab || "items") {
+  UI.stTab = tab;
+  const groups = {};
+  const src = tab === "items" ? S.items : S.mats;
+  src.forEach(x => (groups[x.id] = groups[x.id] || []).push(x));
+  const body = Object.keys(groups).length ? Object.entries(groups).map(([id, arr]) => {
+    const f = info(id);
+    arr.sort((a, b) => b.q - a.q);
+    return `<div class="item"><div class="ic">${f.ic}</div><div class="body"><div class="name">${f.name} ×${arr.length}</div>
+      <div class="muted">${arr.map(x => `${x.q}${x.trait ? "★" : ""}`).join("・")}</div></div></div>`;
+  }).join("") : `<p class="muted">まだ何もない。</p>`;
+  modal(`<h2>📦 倉庫</h2>
+    <div class="tabs"><button class="${tab === "items" ? "on" : ""}" data-act="stTab" data-k="items">品物 ${S.items.length}</button>
+    <button class="${tab === "mats" ? "on" : ""}" data-act="stTab" data-k="mats">素材 ${S.mats.length}</button></div>
+    <p class="muted">数字は品質。★は特性つき。</p><div class="list">${body}</div>`);
+}
+
+function showRecipes() {
+  const body = Object.entries(RECIPES).map(([k, r]) => {
+    const have = S.recipes.includes(k);
+    return `<div class="item ${have ? "" : "off"}"><div class="ic">${have ? r.ic : "❔"}</div><div class="body">
+      <div class="name">${have ? r.name : "？？？"} <span class="tag">${CATS[r.cat].name}むけ</span></div>
+      <div class="muted">${have ? r.needs.map(n => info(n).ic + info(n).name).join(" ＋ ") + ` ／ もとの値段 ${r.value}G` : (r.get === "book" ? "夜の買い物で本が買える" : "だれかが教えてくれるかも")}</div>
+      </div></div>`;
+  }).join("");
+  modal(`<h2>📖 レシピ帳 ${S.recipes.length}/${Object.keys(RECIPES).length}</h2>
+    <p class="muted">同じ性質を ${TRAIT_NEED} 以上そろえると特性がつく。特性つきは高く売れる。</p><div class="list">${body}</div>`);
+}
+
+function showDex() {
+  const cell = (id, f) => S.seen[id]
+    ? `<div class="dex"><div class="ic">${f.ic}</div>${f.name}${MATS[id] ? "<br>" + chips(f.el) : ""}</div>`
+    : `<div class="dex unknown"><div class="ic">❔</div>？？？</div>`;
+  const nm = Object.keys(MATS).filter(k => S.seen[k]).length;
+  const ni = Object.keys(RECIPES).filter(k => S.seen[k]).length;
+  modal(`<h2>📕 図鑑</h2>
+    <h3>素材 ${nm}/${Object.keys(MATS).length}</h3><div class="grid-dex">${Object.entries(MATS).map(([k, f]) => cell(k, f)).join("")}</div>
+    <h3>品物 ${ni}/${Object.keys(RECIPES).length}</h3><div class="grid-dex">${Object.entries(RECIPES).map(([k, f]) => cell(k, f)).join("")}</div>`);
+}
+function dexRate() {
+  const all = Object.keys(MATS).length + Object.keys(RECIPES).length;
+  const got = Object.keys(S.seen).length;
+  return Math.round(got / all * 100);
+}
+
+/* ===================== 画面 ===================== */
+function header() {
+  const ph = { morning: "朝", gather: "昼・採取", brew: "昼・調合", evening: "夕方", night: "夜", ending: "結果" }[S.phase];
+  const ri = rankIdx(), next = RANKS[ri + 1];
+  return `<header class="bar">
+    <span class="day">${S.ended ? "のんびり " : ""}${S.day}日目</span><span class="pill">${ph}</span>
+    <span class="stat">💰 <b>${S.money}</b>G</span>
+    <span class="stat">⭐ <b>${RANKS[ri].name}</b>（評判 ${S.rep}${next ? " / 次 " + next.rep : ""}）</span>
+    <span class="tools"><button data-act="storage" title="倉庫">📦</button><button data-act="recipes" title="レシピ帳">📖</button><button data-act="dex" title="図鑑">📕</button></span>
+  </header>`;
+}
+
+function orderCard(o, canDeliver) {
+  const r = RECIPES[o.item];
+  const cand = orderCandidate(o);
+  const left = o.due - S.day;
+  return `<div class="item order ${o.story ? "story" : ""}"><div class="ic">${r.ic}</div><div class="body">
+    <div class="name">${r.name}（品質${o.minQ}以上）</div>
+    <div class="muted">${esc(o.from)}より ／ ${o.due}日目まで（${left === 0 ? "今日まで！" : "あと" + left + "日"}）</div>
+    <div class="bonus">お礼 ${o.money}G・評判+${o.rep}${o.recipe ? "・レシピ" : ""}${S.recipes.includes(o.item) ? "" : " <span class='minus'>（レシピがまだない）</span>"}</div>
+    </div>${canDeliver ? `<button class="blue" data-act="deliver" data-k="${o.key}" ${cand ? "" : "disabled"}>とどける</button>` : ""}</div>`;
+}
+
+function viewTitle() {
+  const sv = loadSave();
+  document.body.className = "";
+  $("#app").innerHTML = `<div class="card title">
+    <div class="flask">⚗️</div>
     <h1>ノルンの錬金工房</h1>
-    <p class="sub">シュテルネンリングの世界の、小さな工房のおはなし</p>
-    <span class="badge">準備中</span>
-    <p class="note">素材を集めて、調合して、お店で売る。<br>見習い錬金術師の30日を、いま作っています。</p>
-  </main>
+    <p class="muted">師匠の留守をあずかる、見習い錬金術師の30日。</p>
+    ${sv ? `<p><button class="main big" data-act="continue">つづきから（${sv.day}日目・${esc(sv.name)}）</button></p>` : ""}
+    <h3>はじめから</h3>
+    <p><input id="nm" maxlength="8" placeholder="名前（空ならリーネ）"></p>
+    <p><button class="${sv ? "" : "main "}big" data-act="newgame" style="max-width:260px">この名前ではじめる</button></p>
+    ${sv ? `<p class="muted">はじめからにすると、今のセーブは消えます。</p>` : ""}
+  </div>`;
+}
+
+function viewMorning() {
+  const w = weather(), c = CATS[S.trend];
+  const notes = S.today.notes.map(n => `<div class="muted">・${esc(n)}</div>`).join("");
+  const orders = S.orders.length ? S.orders.map(o => orderCard(o, true)).join("") : `<p class="muted">今日の依頼はない。</p>`;
+  return `<div class="card">
+    <h2>☀️ 朝の工房</h2>
+    <div class="row"><span class="pill">${w.ic} ${w.name}</span><span class="pill">${c.ic} 今日は${c.name}が多そう</span></div>
+    ${S.weather === "sun" ? `<p class="muted">晴れの日は採取した素材の質が少しよい。星見の湖で星のしずくがとれる。</p>` :
+      S.weather === "rain" ? `<p class="muted">雨の日は森の薬草・きのこ、川原の清水が多くとれる。</p>` :
+      S.weather === "wind" ? `<p class="muted">風の日は丘で羽根が多くとれる。</p>` : `<p class="muted">くもり。星見の湖の星のしずくはとれにくい。</p>`}
+    ${notes}
+  </div>
+  <div class="card"><h2>📌 銀鹿亭の依頼掲示板</h2><div class="list">${orders}</div></div>
+  <div class="card"><h2>今日の昼はどうする？</h2>
+    <div class="choice">
+      <button data-act="noon" data-k="gather"><span class="ic">🧺</span><b>採取に行く</b><br><span class="muted">素材を ${basketSize()} こ持ち帰る</span></button>
+      <button data-act="noon" data-k="brew" ${S.mats.length ? "" : "disabled"}><span class="ic">🫕</span><b>工房で調合する</b><br><span class="muted">最大 ${brewsPerDay()} 回</span></button>
+    </div>
+    ${S.mats.length ? "" : `<p class="muted">素材がないので、まずは採取に行こう。</p>`}
+  </div>`;
+}
+
+function viewGather() {
+  if (UI.result) {
+    const p = PLACES[UI.result.place];
+    return `<div class="card"><h2>${p.ic} ${p.name}から帰ってきた</h2><div class="list">
+      ${UI.result.got.map(m => `<div class="item"><div class="ic">${MATS[m.id].ic}</div><div class="body"><div class="name">${MATS[m.id].name} ${qtag(m.q)}</div>${chips(m.el)}</div></div>`).join("")}
+      </div><p><button class="main big" data-act="evening">夕方へ（店を開ける）</button></p></div>`;
+  }
+  return `<div class="card"><h2>🧺 どこへ行く？</h2><p class="muted">${weather().ic} ${weather().name} ／ 持ち帰れるのは ${basketSize()} こ</p><div class="list">
+    ${Object.entries(PLACES).map(([k, p]) => {
+      const open = placeOpen(k);
+      return `<div class="item ${open ? "click" : "off"}" ${open ? `data-act="gather" data-k="${k}" role="button" tabindex="0"` : ""}>
+        <div class="ic">${p.ic}</div><div class="body"><div class="name">${p.name}</div>
+        <div class="muted">${p.desc}${open ? "" : ` ／ 🔒 通行証が必要（夜の買い物・${RANKS[p.rank].name}から）`}</div></div></div>`;
+    }).join("")}
+  </div><p><button data-act="back">もどる</button></p></div>`;
+}
+
+function viewBrew() {
+  let h = `<div class="card"><h2>🫕 調合</h2><p class="muted">今日はあと <b>${S.brewsLeft}</b> 回 調合できる。${kamaBonus() ? "（かまの品質 +" + kamaBonus() + "）" : ""}</p>`;
+  if (!UI.recipe) {
+    h += `<div class="list">${S.recipes.map(k => {
+      const r = RECIPES[k], ok = canBrew(k) && S.brewsLeft > 0;
+      return `<div class="item ${ok ? "click" : "off"}" ${ok ? `data-act="recipe" data-k="${k}" role="button" tabindex="0"` : ""}>
+        <div class="ic">${r.ic}</div><div class="body"><div class="name">${r.name} <span class="tag">${CATS[r.cat].name}むけ</span></div>
+        <div class="muted">${r.needs.map(n => { const f = info(n); const have = inStock(n).length; return `${f.ic}${f.name}(${have})`; }).join(" ＋ ")}</div></div></div>`;
+    }).join("")}</div>
+    <p><button class="main big" data-act="evening">工房をしめて夕方へ</button></p></div>`;
+    return h;
+  }
+  const r = RECIPES[UI.recipe];
+  const pv = previewBrew();
+  h += `<h3>${r.ic} ${r.name}</h3><p class="muted">欄をタップすると、入れる素材を選びなおせる。</p><div class="slots">`;
+  r.needs.forEach((n, i) => {
+    const arr = MATS[n] ? S.mats : S.items;
+    const x = arr.find(y => y.uid === UI.pickSel[i]);
+    h += `<div class="slot ${x ? "full" : ""} ${UI.slot === i ? "sel" : ""}" data-act="slot" data-k="${i}" role="button" tabindex="0" style="cursor:pointer">
+      <div style="font-size:26px">${info(n).ic}</div><div>${info(n).name}</div>${x ? qtag(x.q) + "<br>" + chips(x.el) : "<span class='muted'>なし</span>"}</div>`;
+  });
+  h += `</div>`;
+  if (UI.slot != null) {
+    const n = r.needs[UI.slot];
+    const others = new Set(UI.pickSel.filter((u, j) => j !== UI.slot));
+    const cands = inStock(n).filter(x => !others.has(x.uid)).sort((a, b) => b.q - a.q);
+    h += `<h3>「${info(n).name}」をえらぶ</h3><div class="list">${cands.map(x => `<div class="item click ${UI.pickSel[UI.slot] === x.uid ? "on" : ""}" data-act="pick" data-k="${x.uid}" role="button" tabindex="0">
+      <div class="ic">${info(n).ic}</div><div class="body">${qtag(x.q)} ${chips(x.el)} ${x.trait ? `<span class="trait">${TRAIT[x.trait].name}</span>` : ""}</div></div>`).join("")}</div>`;
+  }
+  if (pv) {
+    h += `<h3>できあがりの見こみ</h3><div class="item"><div class="ic">${r.ic}</div><div class="body">
+      <div class="name">${r.name} ${qtag(pv.q)}（±3）</div>${chips(pv.el)}
+      <div>${pv.trait ? `<span class="trait">特性「${TRAIT[pv.trait].name}」がつく！</span>` : `<span class="muted">同じ性質を${TRAIT_NEED}以上そろえると特性がつく</span>`}</div>
+      <div class="muted">ふつうの値段で およそ ${itemPrice({ id: UI.recipe, q: pv.q, trait: pv.trait })}G</div></div></div>`;
+  }
+  h += `<div class="row" style="margin-top:12px"><button data-act="cancelRecipe">やめる</button>
+    <button class="main grow" data-act="brew" ${pv ? "" : "disabled"}>調合する！</button></div></div>`;
+  return h;
+}
+
+function viewEvening() {
+  if (UI.log) {
+    const shown = UI.log.slice(0, UI.shown);
+    const done = !UI.running;
+    const sum = S.today.sales.reduce((s, e) => s + e.money, 0);
+    return `<div class="card"><h2>🏪 お店をあけた</h2>
+      <div class="log">${shown.map(e => `<div>${e.t}</div>`).join("")}${done ? "" : "<div class='muted'>……</div>"}</div>
+      ${done ? `<p>今日の売り上げ：<b>${sum}G</b>（${S.today.sales.length}こ）</p><p><button class="main big" data-act="night">店をしめて夜へ</button></p>`
+             : `<p><button data-act="skip">早送り</button></p>`}</div>`;
+  }
+  const slots = shelfSize();
+  const onShelf = new Set(UI.shelf.map(s => s.uid));
+  const reserved = new Set(S.orders.map(o => orderCandidate(o)).filter(Boolean).map(x => x.uid));
+  const sorted = [...S.items].sort((a, b) => a.id.localeCompare(b.id) || b.q - a.q);
+  let h = `<div class="card"><h2>🌇 夕方のお店</h2>
+    <p class="muted">${CATS[S.trend].ic} 今日は${CATS[S.trend].name}が多そう。たなに ${slots} こまで並べられる。</p>
+    <h3>たな（${UI.shelf.length}/${slots}）</h3>`;
+  if (UI.shelf.length) {
+    h += `<div class="list">${UI.shelf.map(s => {
+      const it = S.items.find(x => x.uid === s.uid), r = RECIPES[it.id];
+      return `<div class="item"><div class="ic">${r.ic}</div><div class="body"><div class="name">${r.name} ${qtag(it.q)} ${it.trait ? `<span class="trait">${TRAIT[it.trait].name}</span>` : ""}</div>
+        <div class="row" style="margin-top:4px">${["low", "mid", "high"].map(l => `<button class="${s.level === l ? "sel" : ""}" style="padding:4px 10px;font-size:14px" data-act="level" data-k="${s.uid}" data-l="${l}">${{ low: "安い", mid: "ふつう", high: "高い" }[l]} ${itemPrice(it, l)}G</button>`).join("")}</div>
+        </div><button data-act="shelf" data-k="${s.uid}" title="おろす">✕</button></div>`;
+    }).join("")}</div>`;
+  } else h += `<p class="muted">まだ何も並べていない。</p>`;
+  h += `<h3>倉庫の品物</h3>`;
+  if (S.items.length) {
+    h += `<p><button data-act="autoShelf">おまかせで並べる</button> <span class="muted">（依頼にとどける分は残す）</span></p><div class="list">${sorted.filter(x => !onShelf.has(x.uid)).map(it => {
+      const r = RECIPES[it.id];
+      return `<div class="item click" data-act="shelf" data-k="${it.uid}" role="button" tabindex="0"><div class="ic">${r.ic}</div><div class="body">
+        <div class="name">${r.name} ${qtag(it.q)} ${it.trait ? `<span class="trait">${TRAIT[it.trait].name}</span>` : ""} ${reserved.has(it.uid) ? `<span class="tag">依頼に使える</span>` : ""}</div>
+        <div class="muted">${CATS[r.cat].name}むけ ／ ふつう ${itemPrice(it)}G</div></div></div>`;
+    }).join("")}</div>`;
+  } else h += `<p class="muted">売る品物がない。調合すると品物ができる。</p>`;
+  h += `<p><button class="main big" data-act="open" ${UI.shelf.length ? "" : "disabled"}>お店をあける</button></p>
+    <p><button class="big" data-act="night">今日は店を休んで夜へ</button></p></div>`;
+  return h;
+}
+
+function viewNight() {
+  const t = S.today;
+  const earned = S.money - t.money0, repd = S.rep - t.rep0;
+  let h = `<div class="card"><h2>🌙 夜のまとめ（${S.day}日目）</h2>
+    <p>お金 ${earned >= 0 ? `<span class="plus">+${earned}G</span>` : `<span class="minus">${earned}G</span>`} ／ 評判 ${repd >= 0 ? `<span class="plus">+${repd}</span>` : `<span class="minus">${repd}</span>`}</p>
+    <p class="muted">売れた数 ${t.sales.length} ／ 倉庫：品物 ${S.items.length}・素材 ${S.mats.length}</p></div>`;
+  h += `<div class="card"><h2>🛒 夜の買い物</h2><p class="muted">所持金 ${S.money}G</p><h3>工房の設備（ヴォルトが導機で強くしてくれる）</h3><div class="list">`;
+  for (const [k, u] of Object.entries(UPG)) {
+    const lv = S[k], c = u.costs[lv];
+    h += `<div class="item"><div class="ic">${u.ic}</div><div class="body"><div class="name">${u.name} Lv${lv + 1}</div>
+      <div class="muted">${c == null ? "これ以上は強くできない" : "次：" + (u.desc[lv] || u.desc[0])}</div></div>
+      ${c == null ? "" : `<button data-act="upg" data-k="${k}" ${S.money >= c ? "" : "disabled"}>${c}G</button>`}</div>`;
+  }
+  h += `</div><h3>通行証</h3><div class="list">`;
+  for (const [k, p] of Object.entries(PLACES)) {
+    if (!p.pass) continue;
+    const has = S.passes.includes(k), rk = rankIdx() >= p.rank;
+    h += `<div class="item ${has ? "off" : ""}"><div class="ic">${p.ic}</div><div class="body"><div class="name">${p.name}</div>
+      <div class="muted">${has ? "持っている" : rk ? p.desc : `${RANKS[p.rank].name}になると買える`}</div></div>
+      ${has ? "" : `<button data-act="pass" data-k="${k}" ${S.money >= p.pass && rk ? "" : "disabled"}>${p.pass}G</button>`}</div>`;
+  }
+  h += `</div><h3>レシピの本</h3><div class="list">`;
+  const books = Object.entries(RECIPES).filter(([k, r]) => r.get === "book");
+  for (const [k, r] of books) {
+    const has = S.recipes.includes(k);
+    h += `<div class="item ${has ? "off" : ""}"><div class="ic">${r.ic}</div><div class="body"><div class="name">${r.name}</div>
+      <div class="muted">${has ? "持っている" : r.needs.map(n => info(n).name).join("＋") + ` ／ ${CATS[r.cat].name}むけ・${r.value}G`}</div></div>
+      ${has ? "" : `<button data-act="book" data-k="${k}" ${S.money >= r.price ? "" : "disabled"}>${r.price}G</button>`}</div>`;
+  }
+  h += `</div></div><div class="card"><button class="main big" data-act="sleep">${S.day >= 30 && !S.ended ? "眠る（30日目のおわり）" : "セーブして眠る"}</button></div>`;
+  return h;
+}
+
+function viewEnding() {
+  const ri = rankIdx();
+  const sd = S.storyDone.length;
+  const dr = dexRate();
+  const words = [
+    "まだまだこれからだ。でも、工房の火は消えなかった。それで十分だよ。",
+    "町の人の顔を、ちゃんと覚えたようだね。よくやった。",
+    "もう一人前だ。わたしがいなくても、この工房はやっていける。",
+    "腕を上げたね。町じゅうで、おまえの品の話を聞いたよ。",
+    "……驚いた。ノルンでいちばんの工房だそうじゃないか。誇りに思うよ。",
+  ];
+  return `<div class="card center">
+    <div class="bigicon">🌌</div>
+    <h2>30日がたった</h2>
+    <p>師匠が帰ってきた。</p>
+    <p style="font-size:18px;line-height:1.9">「ただいま、${esc(S.name)}。<br>${words[ri]}」</p>
+    <h3>けっか</h3>
+    <div class="list" style="text-align:left">
+      <div class="item"><div class="ic">⭐</div><div class="body"><div class="name">工房のランク：${RANKS[ri].name}</div><div class="muted">評判 ${S.rep}</div></div></div>
+      <div class="item"><div class="ic">💰</div><div class="body"><div class="name">所持金 ${S.money}G</div><div class="muted">これまでの売り上げ ${S.stats.earned}G ／ 売った数 ${S.stats.sold}</div></div></div>
+      <div class="item"><div class="ic">📜</div><div class="body"><div class="name">物語の依頼 ${sd}/6</div><div class="muted">依頼をとどけた数 ${S.stats.orders}</div></div></div>
+      <div class="item"><div class="ic">📕</div><div class="body"><div class="name">図鑑 ${dr}%</div><div class="muted">調合した回数 ${S.stats.brewed}</div></div></div>
+    </div>
+    ${sd === 6 ? `<p>🗡️ ナハトとヴォルトの頼みを、ぜんぶかなえた！</p>` : ""}
+    <p><button class="main big" data-act="relax">のんびりモードで続ける</button></p>
+    <p><button class="big" data-act="toTitle">タイトルへ</button></p>
+  </div>`;
+}
+
+function render() {
+  if (!S) { viewTitle(); return; }
+  document.body.className = { evening: "dusk", night: "night", ending: "night" }[S.phase] || "";
+  let v = "";
+  switch (S.phase) {
+    case "morning": v = viewMorning(); break;
+    case "gather": v = viewGather(); break;
+    case "brew": v = viewBrew(); break;
+    case "evening": v = viewEvening(); break;
+    case "night": v = viewNight(); break;
+    case "ending": v = viewEnding(); break;
+  }
+  $("#app").innerHTML = header() + v;
+}
+
+/* ===================== 操作 ===================== */
+const ACTS = {
+  newgame() { const n = ($("#nm").value || "").trim().slice(0, 8); newGame(n); },
+  continue() { S = loadSave(); UI = {}; if (S.phase === "evening") UI.shelf = []; if (S.phase === "gather") UI.result = null; render(); },
+  noon(k) { goNoon(k); },
+  back() { S.phase = "morning"; save(); render(); },
+  gather(k) { gather(k); },
+  evening() { goEvening(); },
+  recipe(k) { selectRecipe(k); },
+  slot(k) { UI.slot = UI.slot === +k ? null : +k; render(); },
+  pick(k) { UI.pickSel[UI.slot] = +k; UI.slot = null; render(); },
+  cancelRecipe() { UI.recipe = null; UI.slot = null; render(); },
+  brew() { doBrew(); },
+  deliver(k) { deliver(k); },
+  shelf(k) { toggleShelf(+k); },
+  level(k, el) { setLevel(+k, el.dataset.l); },
+  autoShelf() { autoShelf(); },
+  open() { openShop(); },
+  skip() { skipLog(); },
+  night() { goNight(); },
+  upg(k) { buyUpg(k); },
+  pass(k) { buyPass(k); },
+  book(k) { buyBook(k); },
+  sleep() { sleep(); },
+  relax() { S.ended = true; S.day++; startDay(); },
+  toTitle() { S = null; render(); },
+  storage() { showStorage(); },
+  stTab(k) { showStorage(k); },
+  recipes() { showRecipes(); },
+  dex() { showDex(); },
+  closeModal() { closeModal(); },
+};
+document.addEventListener("click", e => {
+  const ov = e.target.closest("[data-close]");
+  if (ov && e.target === ov) { closeModal(); return; }
+  const el = e.target.closest("[data-act]");
+  if (!el || el.disabled) return;
+  const f = ACTS[el.dataset.act];
+  if (f) f(el.dataset.k, el);
+});
+document.addEventListener("keydown", e => {
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches("[role=button][data-act]")) { e.preventDefault(); e.target.click(); }
+  if (e.key === "Enter" && e.target.id === "nm") ACTS.newgame();
+});
+
+render();
+</script>
 </body>
 </html>
