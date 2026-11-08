@@ -3,6 +3,7 @@
   ノルンの錬金工房 — 会話データ
   ・ゲーム用の翻案。小説の正史には書き戻さない。
   ・世界の隠された真実、魔法体系の名前、星獣やノヴァの真相、リヒトの身分は出さない。
+  ・名前は名乗らない。仲間同士の会話で呼ばれて、初めて分かる（それまでは stranger.label で表示）。
   ・恋愛っぽくしない。主人公とは「店の人と常連さん」。いつもの性格のまま。
     ナハト＝軽口と皮肉、食べ物の話ばかり。核心に触れると黙る。
     ヴォルト＝幼なじみ。導機にくわしい現実的なツッコミ役。口が悪い。
@@ -18,10 +19,18 @@ const CHARS = {
     name: "ナハト", height: 1.75, from: 1, color: "#3a3f55",
     faces: ["normal", "smile", "joke", "serious", "surprised", "soft"], face: "normal",
     wants: ["potion", "whet", "antidote", "charm", "hipotion", "amulet"],
-    intro: [
-      ["normal", "……ここ、薬屋で合ってる？"],
-      ["normal", "ナハト。傭兵。……ああ、ヴォルトが言ってた工房か。"],
-    ],
+    stranger: {
+      label: "外套のお客さん",
+      ask: { item: [["normal", "{item}、置いてる？"]], cat: [["normal", "薬って、どれが置いてある？"]] },
+      good: [["normal", "……どうも。"]], ok: [["normal", "どうも。"]],
+      none: [["normal", "そっか。じゃあいいや。"]], refuse: [["normal", "……やっぱりやめとく。"]], bye: [["normal", "じゃ。"]],
+    },
+    recall: {
+      buyAsk: [["surprised", "……覚えてたんだ。"], ["normal", "あれ、よく効いたよ。仕事で使った。"]],
+      buySelf: [["normal", "この前の{last}、よかったよ。"], ["joke", "安くて効く店は、覚えとくことにしてるんだ。"]],
+      nobuyAsk: [["normal", "ああ。この前は何も買わなかったけど。"], ["normal", "今日はちゃんと買ってくよ。"]],
+      nobuySelf: [["normal", "また来た。この前は空振りだったからね。"]],
+    },
     greet: {
       low: [
         [["normal", "よう。まだ開いてる？"]],
@@ -136,10 +145,18 @@ const CHARS = {
     name: "ヴォルト", height: 1.72, from: 1, color: "#b88a2c",
     faces: ["smile", "happy", "confident", "surprised", "serious", "calm"], face: "smile",
     wants: ["fuel", "oil", "gear", "lampoil", "soap", "potion"],
-    intro: [
-      ["smile", "よう、{name}。かまの導機、ちゃんと動いてるか？"],
-      ["confident", "夕方は店やるんだって？　燃料があるなら買ってくぞ。"],
-    ],
+    stranger: {
+      label: "杖のお客さん",
+      ask: { item: [["smile", "{item}、あるか？"]], cat: [["smile", "導機に使えるもん、何か置いてるか？"]] },
+      good: [["smile", "おっ、いいな。ありがとよ。"]], ok: [["smile", "ありがとよ。"]],
+      none: [["calm", "ないか。じゃあまた今度な。"]], refuse: [["calm", "悪い、今日はやめとく。"]], bye: [["smile", "じゃあな。"]],
+    },
+    recall: {
+      buyAsk: [["confident", "おう、覚えてたか。"], ["smile", "あの{last}、いい感じだったぞ。"]],
+      buySelf: [["smile", "よう。この前の{last}、悪くなかった。"], ["confident", "燃料とか油とか、また買いに来るからな。"]],
+      nobuyAsk: [["smile", "おう。この前は買いそびれたからな。今日は買ってく。"]],
+      nobuySelf: [["smile", "よう、また来た。この前は欲しいもんがなくてさ。"]],
+    },
     greet: {
       low: [
         [["smile", "よう。開いてるか。"]],
@@ -253,10 +270,18 @@ const CHARS = {
     name: "フレア", height: 1.5, from: 5, color: "#b5352e",
     faces: ["smile", "happy", "calm", "surprised", "serious", "quiet"], face: "smile",
     wants: ["potion", "incense", "ration", "soap", "antidote", "charm"],
-    intro: [
-      ["calm", "……薬草の匂い。ここ、薬屋さん？"],
-      ["smile", "フレア。森の方から来たの。"],
-    ],
+    stranger: {
+      label: "赤い髪のお客さん",
+      ask: { item: [["calm", "{item}、ありますか？"]], cat: [["calm", "旅に持っていける物、ありますか？"]] },
+      good: [["smile", "ありがとう。"]], ok: [["calm", "ありがとう。"]],
+      none: [["calm", "そうですか。"]], refuse: [["calm", "……やっぱり、いいです。"]], bye: [["calm", "さようなら。"]],
+    },
+    recall: {
+      buyAsk: [["surprised", "覚えててくれたの？"], ["smile", "うん。あの{last}、ちゃんと効いた。"]],
+      buySelf: [["smile", "この前の{last}、よかったよ。"], ["calm", "森でも使えた。また買いに来るね。"]],
+      nobuyAsk: [["calm", "うん。この前は、見るだけだった。"]],
+      nobuySelf: [["calm", "また来ました。今日は、買いたい物があって。"]],
+    },
     greet: {
       low: [
         [["happy", "こんにちは。また来たよ。"]],
@@ -358,10 +383,18 @@ const CHARS = {
     name: "セレナ", height: 1.65, from: 9, color: "#7f93c9",
     faces: ["calm", "smile", "kind", "concerned", "surprised", "serious", "soft"], face: "calm",
     wants: ["perfume", "ink", "soap", "incense", "antidote", "potion"],
-    intro: [
-      ["calm", "ごめんください。こちらが錬金工房でしょうか。"],
-      ["kind", "セレナと申します。少し、品物を見せていただけますか。"],
-    ],
+    stranger: {
+      label: "本を持ったお客さん",
+      ask: { item: [["calm", "{item}はございますか？"]], cat: [["calm", "身の回りの品を、少し見せていただけますか。"]] },
+      good: [["kind", "ありがとうございます。"]], ok: [["calm", "ありがとうございます。"]],
+      none: [["calm", "そうですか。失礼いたしました。"]], refuse: [["calm", "今日はやめておきます。"]], bye: [["kind", "失礼いたします。"]],
+    },
+    recall: {
+      buyAsk: [["surprised", "まあ、覚えていてくださったのですね。"], ["kind", "あの{last}、とてもよい品でした。"]],
+      buySelf: [["kind", "先日いただいた{last}、とてもよかったです。"], ["calm", "また寄らせていただきますね。"]],
+      nobuyAsk: [["calm", "ええ。先日は見るだけで、失礼いたしました。"]],
+      nobuySelf: [["calm", "こんばんは。先日はお邪魔いたしました。今日は、きちんと買い物をしてまいりますね。"]],
+    },
     greet: {
       low: [
         [["calm", "こんばんは。お邪魔いたします。"]],
@@ -462,10 +495,18 @@ const CHARS = {
     name: "リヒト", height: 1.8, from: 13, color: "#d8d8de",
     faces: ["normal", "smile", "talk", "serious", "side"], face: "normal",
     wants: ["whet", "hipotion", "charm", "amulet", "ink", "potion"],
-    intro: [
-      ["normal", "失礼する。ここが錬金工房だろうか。"],
-      ["talk", "リヒトという。研ぎ粉を探している。"],
-    ],
+    stranger: {
+      label: "背の高いお客さん",
+      ask: { item: [["normal", "{item}はあるだろうか。"]], cat: [["normal", "旅に役立つ品はあるだろうか。"]] },
+      good: [["normal", "感謝する。"]], ok: [["normal", "感謝する。"]],
+      none: [["normal", "そうか。邪魔をした。"]], refuse: [["normal", "……すまない、やめておく。"]], bye: [["normal", "失礼する。"]],
+    },
+    recall: {
+      buyAsk: [["normal", "ああ。覚えていてくれたか。"], ["talk", "あの{last}は確かな品だった。"]],
+      buySelf: [["talk", "先日の{last}、よい品だった。"], ["normal", "また寄らせてもらう。"]],
+      nobuyAsk: [["normal", "ああ。先日は何も買わずに、すまなかった。"]],
+      nobuySelf: [["normal", "また邪魔をする。"]],
+    },
     greet: {
       low: [
         [["normal", "邪魔をする。"]],
@@ -567,8 +608,8 @@ const CHARS = {
 const DUO = {
   "nacht+volt": {
     first: [
-      ["volt", "smile", "よう、{name}。今日は二人だ。ナハトが寄りたいって言うからさ。"],
-      ["nacht", "joke", "言ってない。お前が引っぱってきたんだろ。"],
+      ["volt", "smile", "よう。今日は二人だ。ナハトが寄りたいって言うからさ。"],
+      ["nacht", "joke", "言ってない。ヴォルト、お前が引っぱってきたんだろ。"],
       ["volt", "confident", "似たようなもんだろ。"],
     ],
     any: [
@@ -580,9 +621,9 @@ const DUO = {
   },
   "flare+nacht": {
     first: [
-      ["flare", "surprised", "あ、森の街道で会った人。"],
-      ["nacht", "normal", "ん？　……ああ、木の実くれた子か。"],
-      ["flare", "happy", "フレアだよ。あの木の実、おいしかった？"],
+      ["flare", "surprised", "あ、街道で木の実を全部食べた人。"],
+      ["nacht", "joke", "人聞きが悪いな。……ナハトだよ。そっちは？"],
+      ["flare", "happy", "フレア。あの木の実、おいしかった？"],
       ["nacht", "joke", "うまかった。もう三つくらいあると、なおよかった。"],
     ],
     any: [
@@ -606,7 +647,8 @@ const DUO = {
       ["serena", "calm", "あなたがナハトさんですね。お噂はかねがね。"],
       ["nacht", "normal", "どんな噂？"],
       ["serena", "smile", "よく食べる方だと。"],
-      ["nacht", "joke", "……間違ってないのが悔しいな。"],
+      ["nacht", "joke", "……間違ってないのが悔しいな。で、そっちは？"],
+      ["serena", "kind", "セレナと申します。以後、お見知りおきを。"],
     ],
     any: [
       [["serena", "calm", "ナハトさん、外套のすそが焦げていますよ。"], ["nacht", "joke", "よく見てるね。"], ["serena", "smile", "見えてしまうのです。性分ですので。"]],

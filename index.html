@@ -194,10 +194,10 @@
   <div id="layer"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/icons.js?v=20261108b"></script>
-<script src="js/talk.js?v=20261108b"></script>
-<script src="js/scenes.js?v=20261108b"></script>
-<script src="js/shop3d.js?v=20261108b"></script>
+<script src="js/icons.js?v=20261108c"></script>
+<script src="js/talk.js?v=20261108c"></script>
+<script src="js/scenes.js?v=20261108c"></script>
+<script src="js/shop3d.js?v=20261108c"></script>
 <script>
 "use strict";
 /* ===================== データ ===================== */
@@ -255,9 +255,9 @@ const CLIENTS = ["宿の常連さん", "見回りの兵士", "鍛冶屋の親方
 const STORY = {
   1: { talk: [["letter", "しばらく旅に出る。工房の留守をたのむ。\nかまの火を絶やさぬように。三十日ほどで戻る。"], ["info", "倉庫には、師匠が作り置きしていった品物と素材が少しある。\n昼に素材を集めるか調合して、夕方にはお店をひらこう。"]] },
   2: { order: { key: "s_potion", item: "potion", minQ: 25, days: 5, money: 80, rep: 5, from: "nacht" },
-       talk: [["nacht", "normal", "{name}。昨日はどうも。……ひとつ頼みたい。"], ["nacht", "normal", "回復薬を作ってくれないか。しばらく外の仕事でね。"], ["nacht", "joke", "……別に、心配してくれなくていい。"]] },
+       talk: [["nacht", "normal", "昨日はどうも。……ひとつ頼みたい。"], ["nacht", "normal", "回復薬を作ってくれないか。しばらく外の仕事でね。"], ["nacht", "joke", "……別に、心配してくれなくていい。"]] },
   6: { order: { key: "s_fuel", item: "fuel", minQ: 35, days: 5, money: 120, rep: 6, from: "volt", recipe: "oil" },
-       talk: [["volt", "confident", "{name}！　町の導機灯の燃料が足りなくてさ。作れるなら回してくれ！"], ["volt", "smile", "礼はする。導機の潤滑油の作り方、教えてやるよ。"]] },
+       talk: [["volt", "confident", "よう、店番。町の導機灯の燃料が足りなくてさ。作れるなら回してくれ！"], ["volt", "smile", "礼はする。導機の潤滑油の作り方、教えてやるよ。"]] },
   10: { order: { key: "s_ration", item: "ration", minQ: 40, days: 6, money: 150, rep: 8, from: "okami" },
         talk: [["okami", "うちの宿、備えの保存食がほしいのよ。作り方の本なら、夜の買い物で手に入るはず。お願いできる？"]] },
   14: { order: { key: "s_charm", item: "charm", minQ: 45, days: 6, money: 200, rep: 8, from: "nacht" },
@@ -314,7 +314,7 @@ function newGame(name) {
     kama: 0, shelf: 0, basket: 0, passes: [], orders: [], seen: {},
     weather: "sun", trend: "adv", storyDone: [], uid: 1, brewsLeft: 0, today: null,
     stats: { sold: 0, brewed: 0, orders: 0, earned: 0, talks: 0 }, ended: false,
-    aff: Object.fromEntries(CHAR_IDS.map(k => [k, 0])), met: {}, duo: {}, chat: {}, ev: {}, visits: {}, recent: {},
+    aff: Object.fromEntries(CHAR_IDS.map(k => [k, 0])), met: {}, known: {}, recalled: {}, lastBuy: {}, duo: {}, chat: {}, ev: {}, visits: {}, recent: {},
   };
   // 師匠が置いていった品物と素材（1日目からお店ができるように）
   const start = [["potion", 42], ["potion", 36], ["fuel", 40], ["soap", 38], ["whet", 35], ["incense", 33]];
@@ -349,8 +349,17 @@ const hearts = a => { const n = Math.min(5, Math.floor(a / 6)); return "★".rep
 function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.innerHTML = t; document.body.appendChild(d); setTimeout(() => d.remove(), 1800); }
 
 /* ===================== 会話の箱 ===================== */
+// 名前を知るまでは見た目で呼ぶ
+const nm = k => (S.known && S.known[k] ? CHARS[k].name : CHARS[k].stranger.label);
+// その場にいる人の名前が会話に出たら、名前が分かる
+async function playShared(lines, ids) {
+  for (const l of lines) {
+    await playLines([l]);
+    for (const k of ids) if (!S.known[k] && l[l.length - 1].includes(CHARS[k].name)) { S.known[k] = true; logShop(`「${CHARS[k].stranger.label}」の名前は${CHARS[k].name}らしい`); }
+  }
+}
 function speakerInfo(who, face) {
-  if (CHARS[who]) { const c = CHARS[who]; return { name: c.name, face: `<img src="${FACE(who, face && c.faces.includes(face) ? face : c.face)}" alt="">` }; }
+  if (CHARS[who]) { const c = CHARS[who]; return { name: nm(who), face: `<img src="${FACE(who, face && c.faces.includes(face) ? face : c.face)}" alt="">` }; }
   if (OTHERS[who]) return { name: OTHERS[who].name, face: OTHERS[who].ic };
   if (who === "me") return { name: S.name, face: UIC.title };
   if (who && who.town) return { name: who.town.name, face: badge(who.town.name[0], who.town.color) };
@@ -412,7 +421,7 @@ async function startDay() {
   const st = S.ended ? null : STORY[S.day];
   if (st) {
     if (st.recipe && !S.recipes.includes(st.recipe)) S.recipes.push(st.recipe);
-    if (st.order) { const o = st.order; S.orders.unshift({ ...o, due: S.day + o.days, from: (CHARS[o.from] || OTHERS[o.from]).name, story: true }); }
+    if (st.order) { const o = st.order; S.orders.unshift({ ...o, due: S.day + o.days, from: CHARS[o.from] ? nm(o.from) : OTHERS[o.from].name, fromId: o.from, story: true }); }
   }
   if (S.orders.filter(o => !o.story).length < 2 && S.day > 1 && Math.random() < 0.7) S.orders.push(randomOrder());
   save(); render();
@@ -479,7 +488,7 @@ async function deliver(key) {
   S.items.splice(S.items.indexOf(it), 1); S.orders.splice(S.orders.indexOf(o), 1);
   S.money += o.money; S.rep += o.rep; S.stats.orders++; S.stats.earned += o.money;
   if (o.recipe && !S.recipes.includes(o.recipe)) S.recipes.push(o.recipe);
-  if (o.story) { S.storyDone.push(o.key); const fk = CHAR_IDS.find(k => CHARS[k].name === o.from); if (fk) S.aff[fk] += 2; }
+  if (o.story) { S.storyDone.push(o.key); const fk = CHARS[o.fromId] ? o.fromId : CHAR_IDS.find(k => CHARS[k].name === o.from); if (fk) S.aff[fk] += 2; }
   save(); render();
   await playLines((o.story ? DONE_TALK[o.key] || [] : []).concat([["info", `${o.from}に「${RECIPES[o.item].name}」をとどけた！\n${o.money}G と 評判 +${o.rep}`]]));
   closeDlg();
@@ -492,6 +501,8 @@ function planVisits() {
   const pool = shuffle(availableChars()).sort((a, b) => (S.visits[a] || 0) - (S.visits[b] || 0));
   const first = [], rest = [];
   for (const k of pool.filter(k => !S.met[k])) { first.push({ chars: [k] }); pool.splice(pool.indexOf(k), 1); }
+  const unnamed = pool.filter(k => !S.known[k]);
+  if (unnamed.length && pool.length >= 2 && Math.random() < 0.6) { const a = unnamed[0], b = pool.find(x => x !== a); rest.push({ chars: [a, b] }); pool.splice(pool.indexOf(a), 1); pool.splice(pool.indexOf(b), 1); }
   while (first.length + rest.length < n) {
     if (pool.length && Math.random() < 0.6) {
       let size = 1; const r = Math.random();
@@ -528,29 +539,29 @@ async function openShop() {
 async function charVisit(ids) {
   for (const k of ids) if (!Shop3D.has(k)) await Shop3D.addChar(k, STAND(k), CHARS[k].height);
   await Shop3D.walkIn(ids);
-  // 初めて来た人は自己紹介だけ（あいさつ・掛け合い・雑談はしない）
+  // 初めて来た人は、ふつうのお客さん。名乗らないし、雑談もしない
   const fresh = ids.filter(k => !S.met[k]);
-  for (const k of fresh) { await playLines(CHARS[k].intro, k); S.met[k] = true; S.aff[k] += 1; }
   for (const k of ids) {
     if (fresh.includes(k)) continue;
+    if (!S.recalled[k] && !S.known[k]) { await recall(k); continue; }
     const c = CHARS[k], lv = affLevel(S.aff[k]);
     const wx = c.greet[S.weather] && Math.random() < 0.4;
     await playLines(wx ? pick(c.greet[S.weather]) : noRepeat(k, "greet-" + lv, c.greet[lv]), k);
   }
-  if (fresh.length) { /* 初対面の日は掛け合いなし */ }
+  if (fresh.length) { /* 初めての人がいる日は掛け合いなし */ }
   else if (ids.length === 2) {
     const key = ids.slice().sort().join("+"), duo = DUO[key];
-    if (duo) { if (!S.duo[key]) { await playLines(duo.first); S.duo[key] = true; } else if (Math.random() < 0.85) await playLines(noRepeat(key, "duo", duo.any)); }
+    if (duo) { if (!S.duo[key]) { await playShared(duo.first, ids); S.duo[key] = true; } else if (Math.random() < 0.85) await playShared(noRepeat(key, "duo", duo.any), ids); }
   } else if (ids.length >= 3) {
-    await playLines(pick(GROUP).filter(l => ids.includes(l[0])));
+    await playShared(pick(GROUP).filter(l => ids.includes(l[0])), ids);
   }
-  const buyers = ids.length === 1 ? ids : shuffle(ids.slice()).slice(0, Math.random() < 0.5 ? 2 : 1);
-  for (const k of buyers) await shopping(k);
+  const buyers = ids.length === 1 || fresh.length ? ids : shuffle(ids.slice()).slice(0, Math.random() < 0.5 ? 2 : 1);
+  for (const k of buyers) await shopping(k, fresh.includes(k));
   // 雑談は2回目の来店から。慣れるまでは、たまにしか話さない
   const talkers = ids.filter(k => !fresh.includes(k) && (S.visits[k] || 0) >= 1);
   if (talkers.length && Math.random() < (ids.length === 1 ? ((S.visits[talkers[0]] || 0) >= 3 ? 0.8 : 0.4) : 0.3)) await smallTalk(pick(talkers));
-  for (const k of ids) await affEvent(k);
-  for (const k of ids) { await playLines(fresh.includes(k) ? CHARS[k].bye[0] : noRepeat(k, "bye", CHARS[k].bye), k); S.visits[k] = (S.visits[k] || 0) + 1; S.aff[k] += 1; }
+  for (const k of ids) if (S.known[k]) await affEvent(k);
+  for (const k of ids) { await playLines(fresh.includes(k) ? CHARS[k].stranger.bye : noRepeat(k, "bye", CHARS[k].bye), k); if (fresh.includes(k)) S.met[k] = true; S.visits[k] = (S.visits[k] || 0) + 1; S.aff[k] += 1; }
   closeDlg();
   await Shop3D.walkOut(ids);
 }
@@ -562,11 +573,31 @@ function wantOf(k) {
   if (known.length && Math.random() < 0.6) return { item: pick(known) };
   return { cat: RECIPES[c.wants[0]].cat };
 }
-async function shopping(k) {
+// 2回目に来たとき：前の買い物の話から
+async function recall(k) {
+  const c = CHARS[k], last = S.lastBuy[k], ln = last ? RECIPES[last].name : "";
+  const opts = [last ? `前に${ln}を買っていかれましたよね？` : "前にも来てくださいましたよね？", "いらっしゃいませ"];
+  const ans = +(await choose(opts));
+  await say("me", null, opts[ans]);
+  const lines = c.recall[(last ? "buy" : "nobuy") + (ans === 0 ? "Ask" : "Self")];
+  await playLines(lines.map(l => [l[0], l[1].replace(/\{last\}/g, ln)]), k);
+  S.recalled[k] = true; if (ans === 0) S.aff[k] += 1;
+}
+const haveIt = want => (want.item ? S.items.some(x => x.id === want.item) : S.items.length > 0);
+async function replyHave(want) { if (haveIt(want)) await say("me", null, want.item ? pick(["ありますよ！", "はい、ありますよ。"]) : pick(["こちらはどうですか？", "少々お待ちください。"])); }
+async function shopping(k, stranger) {
   const c = CHARS[k], want = wantOf(k);
-  const ask = want.item ? noRepeat(k, "ask-item", c.ask.item) : noRepeat(k, "ask-cat", c.ask.cat);
+  const src = stranger ? c.stranger.ask : c.ask;
+  const ask = want.item ? noRepeat(k, "ask-item", src.item) : noRepeat(k, "ask-cat", src.cat);
   for (const l of ask) await say(k, l[0], l[1].replace(/\{item\}/g, want.item ? RECIPES[want.item].name : ""));
-  const res = await offer(k, want, c.name);
+  await replyHave(want);
+  const res = await offer(k, want, nm(k));
+  if (stranger) {
+    if (res.none) await playLines(c.stranger.none, k);
+    else if (!res.bought) await playLines(c.stranger.refuse, k);
+    else await playLines(res.item.q >= 60 ? c.stranger.good : c.stranger.ok, k);
+    return;
+  }
   if (res.none) { await playLines(c.react.none, k); return; }
   if (!res.bought) { await playLines(res.level === "high" ? c.react.high.slice(0, 1).concat(c.react.refuse) : c.react.refuse, k); return; }
   if (res.level === "high") await playLines(c.react.high, k); else if (res.level === "low") await playLines(c.react.low, k);
@@ -584,6 +615,7 @@ async function townVisit(t) {
   const inHand = opts.filter(k => S.items.some(x => x.id === k));
   const want = inHand.length && Math.random() < 0.75 ? { item: pick(inHand) } : opts.length ? { item: pick(opts) } : { cat: t.cat };
   await say(who, null, pick(TOWN_LINES.ask).replace(/\{item\}/g, want.item ? RECIPES[want.item].name : "何か"));
+  await replyHave(want);
   const res = await offer(who, want, t.name);
   if (res.none) await say(who, null, pick(TOWN_LINES.none));
   else if (!res.bought) await say(who, null, (res.level === "high" ? pick(TOWN_LINES.high) + "\n" : "") + pick(TOWN_LINES.refuse));
@@ -616,6 +648,7 @@ async function offer(who, want, name) {
   if (bought) {
     const price = itemPrice(it, level);
     S.items.splice(S.items.indexOf(it), 1);
+    if (k) S.lastBuy[k] = it.id;
     S.money += price; S.rep += 1 + (it.q >= 70 ? 1 : 0) + (level === "low" ? 1 : 0); S.stats.sold++; S.stats.earned += price;
     S.today.sales.push({ name, item: RECIPES[it.id].name, price });
     logShop(`${esc(name)}：「${RECIPES[it.id].name}」 <span class="plus">+${price}G</span>`);
@@ -639,7 +672,7 @@ async function smallTalk(k) {
   await playLines(t.c[ans].res, k);
   S.aff[k] += t.c[ans].aff; S.stats.talks++;
   if (!S.chat[k].includes(i)) S.chat[k].push(i);
-  logShop(`${c.name}と話しこんだ`);
+  logShop(`${nm(k)}と話しこんだ`);
 }
 async function affEvent(k) {
   const c = CHARS[k]; S.ev[k] = S.ev[k] || [];
@@ -692,7 +725,7 @@ function viewTitle() {
 function viewMorning() {
   const w = weather(), c = CATS[S.trend];
   const tip = { sun: "晴れの日は素材の質が少しよい。星見の湖で星のしずくがとれる。", rain: "雨の日は森の薬草・きのこ、川原の清水が多くとれる。", wind: "風の日は丘で羽根が多くとれる。", cloud: "くもり。星見の湖の星のしずくはとれにくい。" }[S.weather];
-  const met = availableChars().filter(k => S.met[k]).map(k => CHARS[k].name);
+  const met = availableChars().filter(k => S.met[k]).map(nm);
   const fresh = availableChars().some(k => !S.met[k]);
   return `<div class="panel"><h2>${UIC.morning} 朝の工房</h2>
     <div class="row"><span class="pill">${w.ic} ${w.name}</span><span class="pill">${c.ic} ${c.name}の品が人気</span></div>
@@ -775,7 +808,7 @@ function viewNight() {
 function viewEnding() {
   const ri = rankIdx(), sd = S.storyDone.length;
   const words = ["まだまだこれからだ。でも、工房の火は消えなかった。それで十分だよ。", "町の人の顔を、ちゃんと覚えたようだね。よくやった。", "もう一人前だ。わたしがいなくても、この工房はやっていける。", "腕を上げたね。町じゅうで、おまえの品の話を聞いたよ。", "……驚いた。ノルンでいちばんの工房だそうじゃないか。誇りに思うよ。"];
-  const best = CHAR_IDS.filter(k => S.met[k]).sort((a, b) => S.aff[b] - S.aff[a])[0];
+  const best = CHAR_IDS.filter(k => S.known[k]).sort((a, b) => S.aff[b] - S.aff[a])[0];
   return `<div class="panel center"><div class="bigicon">${UIC.star}</div><h2 style="justify-content:center">30日がたった</h2><p>師匠が帰ってきた。</p>
     <p style="font-size:18px;line-height:1.9;font-family:var(--serif)">「ただいま、${esc(S.name)}。<br>${words[ri]}」</p>
     ${best ? `<p><img src="${FACE(best, CHARS[best].faces[1])}" alt="" style="width:90px;height:90px;border-radius:50%;border:2px solid var(--gold)"><br>いちばんの常連さんは <b>${CHARS[best].name}</b><br><span class="hearts">${hearts(S.aff[best])}</span></p>` : ""}
@@ -818,7 +851,7 @@ function showStorage(tab = UI.stTab || "items") {
 }
 function showFriends() {
   const list = CHAR_IDS.map(k => { const c = CHARS[k];
-    return S.met[k] ? `<div class="friend"><img src="${FACE(k, c.faces[1])}" alt=""><div><b>${c.name}</b><div class="hearts">${hearts(S.aff[k])}</div><div class="muted">来店 ${S.visits[k] || 0}回</div></div></div>`
+    return S.met[k] ? `<div class="friend"><img src="${FACE(k, c.faces[1])}" alt=""><div><b>${nm(k)}</b>${S.known[k] ? "" : `<div class="muted">名前はまだ知らない</div>`}<div class="hearts">${hearts(S.aff[k])}</div><div class="muted">来店 ${S.visits[k] || 0}回</div></div></div>`
       : `<div class="friend"><span class="ico q" style="font-size:40px"><i>？</i></span><div><b>？？？</b><div class="muted">${S.day >= c.from ? "そろそろ来るかも" : "まだ会っていない"}</div></div></div>`; }).join("");
   modal(`<h2>${UIC.friend} 常連さん</h2><p class="muted">★は常連度。お店で話したり、いい品を渡したりすると上がる。上がると、話してくれることが増える。</p><div class="friends">${list}</div>`);
 }
@@ -836,7 +869,7 @@ function showDex() {
 /* ===================== 操作 ===================== */
 const ACTS = {
   newgame() { newGame(($("#nm").value || "").trim().slice(0, 8)); },
-  continue() { S = loadSave(); UI = {}; render(); },
+  continue() { S = loadSave(); if (!S.known) S.known = { ...S.met }; S.recalled = S.recalled || {}; S.lastBuy = S.lastBuy || {}; UI = {}; render(); },
   noon(k) { goNoon(k); }, back() { S.phase = "morning"; save(); render(); },
   gather(k) { gather(k); }, evening() { goEvening(); },
   recipe(k) { UI.recipe = k; UI.sel = bestPick(k); UI.slot = null; render(); },
