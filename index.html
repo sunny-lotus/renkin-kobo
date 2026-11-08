@@ -194,10 +194,10 @@
   <div id="layer"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/icons.js"></script>
-<script src="js/talk.js"></script>
-<script src="js/scenes.js"></script>
-<script src="js/shop3d.js"></script>
+<script src="js/icons.js?v=20261108b"></script>
+<script src="js/talk.js?v=20261108b"></script>
+<script src="js/scenes.js?v=20261108b"></script>
+<script src="js/shop3d.js?v=20261108b"></script>
 <script>
 "use strict";
 /* ===================== データ ===================== */
@@ -528,13 +528,17 @@ async function openShop() {
 async function charVisit(ids) {
   for (const k of ids) if (!Shop3D.has(k)) await Shop3D.addChar(k, STAND(k), CHARS[k].height);
   await Shop3D.walkIn(ids);
-  for (const k of ids) if (!S.met[k]) { await playLines(CHARS[k].intro, k); S.met[k] = true; S.aff[k] += 1; }
+  // 初めて来た人は自己紹介だけ（あいさつ・掛け合い・雑談はしない）
+  const fresh = ids.filter(k => !S.met[k]);
+  for (const k of fresh) { await playLines(CHARS[k].intro, k); S.met[k] = true; S.aff[k] += 1; }
   for (const k of ids) {
+    if (fresh.includes(k)) continue;
     const c = CHARS[k], lv = affLevel(S.aff[k]);
     const wx = c.greet[S.weather] && Math.random() < 0.4;
     await playLines(wx ? pick(c.greet[S.weather]) : noRepeat(k, "greet-" + lv, c.greet[lv]), k);
   }
-  if (ids.length === 2) {
+  if (fresh.length) { /* 初対面の日は掛け合いなし */ }
+  else if (ids.length === 2) {
     const key = ids.slice().sort().join("+"), duo = DUO[key];
     if (duo) { if (!S.duo[key]) { await playLines(duo.first); S.duo[key] = true; } else if (Math.random() < 0.85) await playLines(noRepeat(key, "duo", duo.any)); }
   } else if (ids.length >= 3) {
@@ -542,9 +546,11 @@ async function charVisit(ids) {
   }
   const buyers = ids.length === 1 ? ids : shuffle(ids.slice()).slice(0, Math.random() < 0.5 ? 2 : 1);
   for (const k of buyers) await shopping(k);
-  if (ids.length === 1 || Math.random() < 0.35) await smallTalk(pick(ids));
+  // 雑談は2回目の来店から。慣れるまでは、たまにしか話さない
+  const talkers = ids.filter(k => !fresh.includes(k) && (S.visits[k] || 0) >= 1);
+  if (talkers.length && Math.random() < (ids.length === 1 ? ((S.visits[talkers[0]] || 0) >= 3 ? 0.8 : 0.4) : 0.3)) await smallTalk(pick(talkers));
   for (const k of ids) await affEvent(k);
-  for (const k of ids) { await playLines(noRepeat(k, "bye", CHARS[k].bye), k); S.visits[k] = (S.visits[k] || 0) + 1; S.aff[k] += 1; }
+  for (const k of ids) { await playLines(fresh.includes(k) ? CHARS[k].bye[0] : noRepeat(k, "bye", CHARS[k].bye), k); S.visits[k] = (S.visits[k] || 0) + 1; S.aff[k] += 1; }
   closeDlg();
   await Shop3D.walkOut(ids);
 }

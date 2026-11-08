@@ -19,10 +19,8 @@ const CHARS = {
     faces: ["normal", "smile", "joke", "serious", "surprised", "soft"], face: "normal",
     wants: ["potion", "whet", "antidote", "charm", "hipotion", "amulet"],
     intro: [
-      ["normal", "へえ、ここが例の工房か。ヴォルトに聞いてたよりずっと片付いてるな。"],
-      ["joke", "あいつの作業場、床が見えないんだよ。"],
-      ["normal", "ナハト。傭兵をやってる。薬はよく使うから、たぶんちょくちょく来る。"],
-      ["smile", "よろしく、店主さん。……{name}、だっけ。"],
+      ["normal", "……ここ、薬屋で合ってる？"],
+      ["normal", "ナハト。傭兵。……ああ、ヴォルトが言ってた工房か。"],
     ],
     greet: {
       low: [
@@ -139,9 +137,8 @@ const CHARS = {
     faces: ["smile", "happy", "confident", "surprised", "serious", "calm"], face: "smile",
     wants: ["fuel", "oil", "gear", "lampoil", "soap", "potion"],
     intro: [
-      ["smile", "よう、{name}。工房の調子はどうだ。"],
-      ["confident", "かまの導機、ちゃんと動いてるだろ。俺が見たんだから当然だけどな。"],
-      ["smile", "夕方は店をやるんだって？　燃料が置いてあるなら、俺は買いに来るぞ。"],
+      ["smile", "よう、{name}。かまの導機、ちゃんと動いてるか？"],
+      ["confident", "夕方は店やるんだって？　燃料があるなら買ってくぞ。"],
     ],
     greet: {
       low: [
@@ -257,9 +254,8 @@ const CHARS = {
     faces: ["smile", "happy", "calm", "surprised", "serious", "quiet"], face: "smile",
     wants: ["potion", "incense", "ration", "soap", "antidote", "charm"],
     intro: [
-      ["surprised", "いい匂い。薬草と、乾かした花と……煙の匂い。"],
-      ["happy", "こんにちは。フレアっていいます。森の方から来たの。"],
-      ["smile", "薬草を扱うお店なら、話が合いそうだと思って。"],
+      ["calm", "……薬草の匂い。ここ、薬屋さん？"],
+      ["smile", "フレア。森の方から来たの。"],
     ],
     greet: {
       low: [
@@ -302,7 +298,7 @@ const CHARS = {
       refuse: [["quiet", "ごめんね、今日はやめておく。"]],
     },
     bye: [
-      [["happy", "またね、{name}。"]],
+      [["happy", "またね。"]],
       [["smile", "森でいい素材を見つけたら、教えるね。"]],
       [["calm", "今日もありがとう。おやすみなさい。"]],
     ],
@@ -364,8 +360,7 @@ const CHARS = {
     wants: ["perfume", "ink", "soap", "incense", "antidote", "potion"],
     intro: [
       ["calm", "ごめんください。こちらが錬金工房でしょうか。"],
-      ["kind", "セレナと申します。薬のことを学んでいて、素材や道具を探しているのです。"],
-      ["smile", "まあ、お若い店主さん。……失礼しました。腕と年齢は関係ありませんものね。"],
+      ["kind", "セレナと申します。少し、品物を見せていただけますか。"],
     ],
     greet: {
       low: [
@@ -469,8 +464,7 @@ const CHARS = {
     wants: ["whet", "hipotion", "charm", "amulet", "ink", "potion"],
     intro: [
       ["normal", "失礼する。ここが錬金工房だろうか。"],
-      ["talk", "リヒトという。旅の剣士だ。研ぎ粉を探している。"],
-      ["serious", "この町の店は、どこも親切だな。見習うべきところが多い。"],
+      ["talk", "リヒトという。研ぎ粉を探している。"],
     ],
     greet: {
       low: [
