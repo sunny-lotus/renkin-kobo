@@ -21,7 +21,7 @@ const CHARS = {
     wants: ["potion", "whet", "antidote", "charm", "hipotion", "amulet"],
     stranger: {
       label: "外套のお客さん",
-      ask: { item: [["normal", "{item}、置いてる？"]], cat: [["normal", "薬って、どれが置いてある？"]] },
+      ask: { item: [[["normal", "{item}、置いてる？"]]], cat: [[["normal", "薬って、どれが置いてある？"]]] },
       good: [["normal", "……どうも。"]], ok: [["normal", "どうも。"]],
       none: [["normal", "そっか。じゃあいいや。"]], refuse: [["normal", "……やっぱりやめとく。"]], bye: [["normal", "じゃ。"]],
     },
@@ -147,7 +147,7 @@ const CHARS = {
     wants: ["fuel", "oil", "gear", "lampoil", "soap", "potion"],
     stranger: {
       label: "杖のお客さん",
-      ask: { item: [["smile", "{item}、あるか？"]], cat: [["smile", "導機に使えるもん、何か置いてるか？"]] },
+      ask: { item: [[["smile", "{item}、あるか？"]]], cat: [[["smile", "導機に使えるもん、何か置いてるか？"]]] },
       good: [["smile", "おっ、いいな。ありがとよ。"]], ok: [["smile", "ありがとよ。"]],
       none: [["calm", "ないか。じゃあまた今度な。"]], refuse: [["calm", "悪い、今日はやめとく。"]], bye: [["smile", "じゃあな。"]],
     },
@@ -272,7 +272,7 @@ const CHARS = {
     wants: ["potion", "incense", "ration", "soap", "antidote", "charm"],
     stranger: {
       label: "赤い髪のお客さん",
-      ask: { item: [["calm", "{item}、ありますか？"]], cat: [["calm", "旅に持っていける物、ありますか？"]] },
+      ask: { item: [[["calm", "{item}、ありますか？"]]], cat: [[["calm", "旅に持っていける物、ありますか？"]]] },
       good: [["smile", "ありがとう。"]], ok: [["calm", "ありがとう。"]],
       none: [["calm", "そうですか。"]], refuse: [["calm", "……やっぱり、いいです。"]], bye: [["calm", "さようなら。"]],
     },
@@ -385,7 +385,7 @@ const CHARS = {
     wants: ["perfume", "ink", "soap", "incense", "antidote", "potion"],
     stranger: {
       label: "本を持ったお客さん",
-      ask: { item: [["calm", "{item}はございますか？"]], cat: [["calm", "身の回りの品を、少し見せていただけますか。"]] },
+      ask: { item: [[["calm", "{item}はございますか？"]]], cat: [[["calm", "身の回りの品を、少し見せていただけますか。"]]] },
       good: [["kind", "ありがとうございます。"]], ok: [["calm", "ありがとうございます。"]],
       none: [["calm", "そうですか。失礼いたしました。"]], refuse: [["calm", "今日はやめておきます。"]], bye: [["kind", "失礼いたします。"]],
     },
@@ -497,7 +497,7 @@ const CHARS = {
     wants: ["whet", "hipotion", "charm", "amulet", "ink", "potion"],
     stranger: {
       label: "背の高いお客さん",
-      ask: { item: [["normal", "{item}はあるだろうか。"]], cat: [["normal", "旅に役立つ品はあるだろうか。"]] },
+      ask: { item: [[["normal", "{item}はあるだろうか。"]]], cat: [[["normal", "旅に役立つ品はあるだろうか。"]]] },
       good: [["normal", "感謝する。"]], ok: [["normal", "感謝する。"]],
       none: [["normal", "そうか。邪魔をした。"]], refuse: [["normal", "……すまない、やめておく。"]], bye: [["normal", "失礼する。"]],
     },
